@@ -1,0 +1,35 @@
+from contextlib import asynccontextmanager
+
+import uvicorn
+from fastapi import FastAPI
+
+from api.configurations import register_exception_handlers
+from infrastructure.dataaccess import init_db
+from infrastructure.services import get_settings
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await init_db()
+    yield
+
+
+def create_app() -> FastAPI:
+    settings = get_settings()
+
+    app = FastAPI(
+        title=settings.APP_NAME,
+        debug=settings.DEBUG,
+        lifespan=lifespan,
+    )
+
+    register_exception_handlers(app)
+
+    return app
+
+
+app = create_app()
+
+if __name__ == "__main__":
+    settings = get_settings()
+    uvicorn.run("main:app", host="0.0.0.0", port=settings.PORT, reload=True)
