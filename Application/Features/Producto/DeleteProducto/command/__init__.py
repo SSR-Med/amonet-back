@@ -1,0 +1,2 @@
+from .delete_producto_command import DeleteProductoCommand
+from .delete_producto_command_handler import DeleteProductoCommandHandler
