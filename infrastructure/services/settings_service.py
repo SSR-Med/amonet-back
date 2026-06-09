@@ -14,6 +14,7 @@ class SettingsService(BaseSettings):
     DEBUG: bool = True
     DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/myapp"
     PORT: int = 8000
+    CORS_ORIGINS: str = "http://localhost:3000,http://localhost:3001"
 
 
 @lru_cache
