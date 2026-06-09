@@ -1,1 +1,2 @@
+from .marca import Marca
 from .variables_globales_materia_prima import VariablesGlobalesMateriaPrima
