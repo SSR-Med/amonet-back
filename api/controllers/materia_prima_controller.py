@@ -15,6 +15,9 @@ from Application.Features.MateriaPrima.DeleteVariablesGlobales.command import (
 from Application.Features.MateriaPrima.GetAllTiposMateriaPrima.query import (
     GetAllTiposMateriaPrimaQueryHandler,
 )
+from Application.Features.MateriaPrima.GetAllTiposUnidad.query import (
+    GetAllTiposUnidadQueryHandler,
+)
 from Application.Features.MateriaPrima.GetAllVariablesGlobales.dtos import (
     GetAllVariablesGlobalesQueryDto,
 )
@@ -30,6 +33,7 @@ from Application.Features.MateriaPrima.UpdateVariablesGlobales.dtos import (
 from infrastructure.dataaccess import get_async_session
 from infrastructure.dataaccess.configurations import (
     CatalogoTipoMateriaPrimaConfiguration,
+    CatalogoTipoUnidadConfiguration,
     VariablesGlobalesMateriaPrimaConfiguration,
 )
 from infrastructure.dataaccess.repository import Repository
@@ -44,6 +48,15 @@ async def get_tipos(
 ):
     repository = Repository(session, CatalogoTipoMateriaPrimaConfiguration)
     handler = GetAllTiposMateriaPrimaQueryHandler(repository)
+    return await handler.handle()
+
+
+@router.get("/tipos_unidad")
+async def get_tipos_unidad(
+    session: AsyncSession = Depends(get_async_session),
+):
+    repository = Repository(session, CatalogoTipoUnidadConfiguration)
+    handler = GetAllTiposUnidadQueryHandler(repository)
     return await handler.handle()
 
 
