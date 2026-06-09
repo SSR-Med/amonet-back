@@ -1,44 +1,42 @@
-from Application.Features.Marca.CreateMarca.dtos import (
-    CreateMarcaCommandDto,
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from Application.Features.Marca.CreateMarca.command import (
+    CreateMarcaCommand,
 )
 from Application.Features.Marca.CreateMarca.mappers import (
     CreateMarcaMapper,
 )
-from Application.Features.Marca.GetAllMarcas.mappers import (
-    MarcaMapper,
-)
 from Application.Features.Marca.GetAllMarcas.dtos import (
     MarcaResponseDto,
 )
+from Application.Features.Marca.GetAllMarcas.mappers import (
+    MarcaMapper,
+)
 from core.exceptions import ConflictException
-from core.interfaces import IRepository, IUnitOfWork
 from infrastructure.dataaccess.configurations import MarcaConfiguration
+from infrastructure.dataaccess.repository import Repository
+from infrastructure.dataaccess.unit_of_work import UnitOfWork
 
 
 class CreateMarcaCommandHandler:
 
-    def __init__(
-        self,
-        repository: IRepository[MarcaConfiguration],
-        unit_of_work: IUnitOfWork,
-    ) -> None:
-        self._repository = repository
-        self._unit_of_work = unit_of_work
+    def __init__(self, session: AsyncSession) -> None:
+        self._repository = Repository(session, MarcaConfiguration)
+        self._unit_of_work = UnitOfWork(session)
 
     async def handle(
-        self, dto: CreateMarcaCommandDto
+        self, command: CreateMarcaCommand
     ) -> MarcaResponseDto:
-        dto.nombre = dto.nombre.strip().upper()
+        command.nombre = command.nombre.strip().upper()
 
         existing = await self._repository.first_or_default(
-            lambda q: q.where(MarcaConfiguration.nombre == dto.nombre)
+            lambda q: q.where(MarcaConfiguration.nombre == command.nombre)
         )
         if existing is not None:
-            raise ConflictException(
-                f"Marca '{dto.nombre}' already exists"
-            )
+            raise ConflictException(f"Marca '{command.nombre}' already exists")
 
-        model = CreateMarcaMapper.to_model(dto)
+        model = CreateMarcaMapper.to_model(command)
         await self._repository.create(model)
         await self._unit_of_work.commit()
+
         return MarcaMapper.to_response(model)

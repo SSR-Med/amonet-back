@@ -1,3 +1,2 @@
-from .delete_variables_globales_command_handler import (
-    DeleteVariablesGlobalesCommandHandler,
-)
+from .delete_variables_globales_command import DeleteVariablesGlobalesCommand
+from .delete_variables_globales_command_handler import DeleteVariablesGlobalesCommandHandler

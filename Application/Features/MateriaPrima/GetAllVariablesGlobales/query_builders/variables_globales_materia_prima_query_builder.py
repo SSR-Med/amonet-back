@@ -7,14 +7,14 @@ from infrastructure.dataaccess.configurations import (
 )
 from infrastructure.query_builder import QueryBuilder
 
-from Application.Features.MateriaPrima.GetAllVariablesGlobales.dtos import (
-    GetAllVariablesGlobalesQueryDto,
+from Application.Features.MateriaPrima.GetAllVariablesGlobales.query import (
+    GetAllVariablesGlobalesQuery,
 )
 
 
 class VariablesGlobalesMateriaPrimaQueryBuilder:
 
-    def __init__(self, dto: GetAllVariablesGlobalesQueryDto) -> None:
+    def __init__(self, dto: GetAllVariablesGlobalesQuery) -> None:
         self._dto = dto
 
     def build(self) -> Callable:

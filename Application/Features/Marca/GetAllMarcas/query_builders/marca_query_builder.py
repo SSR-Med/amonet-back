@@ -5,14 +5,14 @@ from sqlalchemy import func
 from infrastructure.dataaccess.configurations import MarcaConfiguration
 from infrastructure.query_builder import QueryBuilder
 
-from Application.Features.Marca.GetAllMarcas.dtos import (
-    GetAllMarcasQueryDto,
+from Application.Features.Marca.GetAllMarcas.query import (
+    GetAllMarcasQuery,
 )
 
 
 class MarcaQueryBuilder:
 
-    def __init__(self, dto: GetAllMarcasQueryDto) -> None:
+    def __init__(self, dto: GetAllMarcasQuery) -> None:
         self._dto = dto
 
     def build(self) -> Callable:

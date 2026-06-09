@@ -3,5 +3,5 @@ from typing import Optional
 from core.dtos import PaginationQuery
 
 
-class GetAllMarcasQueryDto(PaginationQuery):
+class GetAllMarcasQuery(PaginationQuery):
     nombre: Optional[str] = None

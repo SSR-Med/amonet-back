@@ -1,1 +1,2 @@
+from .get_all_marcas_query import GetAllMarcasQuery
 from .get_all_marcas_query_handler import GetAllMarcasQueryHandler

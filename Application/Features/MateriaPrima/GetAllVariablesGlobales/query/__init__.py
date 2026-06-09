@@ -1,3 +1,2 @@
-from .get_all_variables_globales_query_handler import (
-    GetAllVariablesGlobalesQueryHandler,
-)
+from .get_all_variables_globales_query import GetAllVariablesGlobalesQuery
+from .get_all_variables_globales_query_handler import GetAllVariablesGlobalesQueryHandler

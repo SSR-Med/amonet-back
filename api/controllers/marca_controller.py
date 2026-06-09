@@ -4,69 +4,53 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from Application.Features.Marca.CreateMarca.command import (
+    CreateMarcaCommand,
     CreateMarcaCommandHandler,
 )
-from Application.Features.Marca.CreateMarca.dtos import (
-    CreateMarcaCommandDto,
-)
 from Application.Features.Marca.DeleteMarca.command import (
+    DeleteMarcaCommand,
     DeleteMarcaCommandHandler,
 )
-from Application.Features.Marca.DeleteMarca.dtos import (
-    DeleteMarcaCommand,
-)
-from Application.Features.Marca.GetAllMarcas.dtos import (
-    GetAllMarcasQueryDto,
-)
 from Application.Features.Marca.GetAllMarcas.query import (
+    GetAllMarcasQuery,
     GetAllMarcasQueryHandler,
 )
 from Application.Features.Marca.UpdateMarca.command import (
+    UpdateMarcaCommand,
     UpdateMarcaCommandHandler,
 )
-from Application.Features.Marca.UpdateMarca.dtos import (
-    UpdateMarcaCommandDto,
-)
 from infrastructure.dataaccess import get_async_session
-from infrastructure.dataaccess.configurations import MarcaConfiguration
-from infrastructure.dataaccess.repository import Repository
-from infrastructure.dataaccess.unit_of_work import UnitOfWork
 
 router = APIRouter(prefix="/marcas", tags=["Marcas"])
 
 
 @router.get("/")
 async def get_all(
-    dto: GetAllMarcasQueryDto = Query(),
+    query: GetAllMarcasQuery = Query(),
     session: AsyncSession = Depends(get_async_session),
 ):
-    repository = Repository(session, MarcaConfiguration)
-    handler = GetAllMarcasQueryHandler(repository)
-    return await handler.handle(dto)
+    handler = GetAllMarcasQueryHandler(session)
+    return await handler.handle(query)
 
 
 @router.post("/", status_code=201)
 async def create(
-    dto: CreateMarcaCommandDto,
+    command: CreateMarcaCommand,
     session: AsyncSession = Depends(get_async_session),
 ):
-    repository = Repository(session, MarcaConfiguration)
-    unit_of_work = UnitOfWork(session)
-    handler = CreateMarcaCommandHandler(repository, unit_of_work)
-    return await handler.handle(dto)
+    handler = CreateMarcaCommandHandler(session)
+    return await handler.handle(command)
 
 
 @router.put("/{id}")
 async def update(
     id: UUID,
-    dto: UpdateMarcaCommandDto,
+    command: UpdateMarcaCommand,
     session: AsyncSession = Depends(get_async_session),
 ):
-    repository = Repository(session, MarcaConfiguration)
-    unit_of_work = UnitOfWork(session)
-    handler = UpdateMarcaCommandHandler(repository, unit_of_work)
-    dto.id = id
-    return await handler.handle(dto)
+    handler = UpdateMarcaCommandHandler(session)
+    command.id = id
+    return await handler.handle(command)
 
 
 @router.delete("/{id}", status_code=204)
@@ -74,7 +58,5 @@ async def delete(
     id: UUID,
     session: AsyncSession = Depends(get_async_session),
 ):
-    repository = Repository(session, MarcaConfiguration)
-    unit_of_work = UnitOfWork(session)
-    handler = DeleteMarcaCommandHandler(repository, unit_of_work)
+    handler = DeleteMarcaCommandHandler(session)
     await handler.handle(DeleteMarcaCommand(id=id))

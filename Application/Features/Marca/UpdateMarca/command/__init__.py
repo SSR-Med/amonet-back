@@ -1,1 +1,2 @@
+from .update_marca_command import UpdateMarcaCommand
 from .update_marca_command_handler import UpdateMarcaCommandHandler

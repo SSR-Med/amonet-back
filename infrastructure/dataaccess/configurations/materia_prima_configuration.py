@@ -2,7 +2,7 @@ from uuid import uuid4
 
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from infrastructure.dataaccess.base import Base
 
@@ -30,3 +30,6 @@ class MateriaPrimaConfiguration(Base):
         ),
         nullable=False,
     )
+
+    tipo_materia_prima = relationship("CatalogoTipoMateriaPrimaConfiguration")
+    tipo_unidad = relationship("CatalogoTipoUnidadConfiguration")

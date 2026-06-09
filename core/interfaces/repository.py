@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Callable, Generic, List, Optional, Tuple, TypeVar
+from typing import Any, Callable, Generic, List, Optional, Tuple, TypeVar
 
 T = TypeVar("T")
 
@@ -12,6 +12,7 @@ class IRepository(ABC, Generic[T]):
         page: int = 1,
         page_size: int = 20,
         where: Optional[Callable] = None,
+        loader_options: Optional[List[Any]] = None,
     ) -> Tuple[List[T], int, int, int]:
         pass
 

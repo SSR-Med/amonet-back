@@ -5,5 +5,5 @@ from fastapi import Query
 from core.dtos import PaginationQuery
 
 
-class GetAllVariablesGlobalesQueryDto(PaginationQuery):
+class GetAllVariablesGlobalesQuery(PaginationQuery):
     nombre: Optional[str] = Query(None)

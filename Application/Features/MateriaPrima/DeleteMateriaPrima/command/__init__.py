@@ -1,1 +1,2 @@
+from .delete_materia_prima_command import DeleteMateriaPrimaCommand
 from .delete_materia_prima_command_handler import DeleteMateriaPrimaCommandHandler

@@ -1,2 +1,1 @@
-from .get_all_marcas_query_dto import GetAllMarcasQueryDto
 from .marca_response_dto import MarcaResponseDto

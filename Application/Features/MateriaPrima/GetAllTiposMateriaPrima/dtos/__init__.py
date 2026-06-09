@@ -1,2 +1,1 @@
-from .get_all_tipos_materia_prima_query import GetAllTiposMateriaPrimaQuery
 from .tipo_materia_prima_response_dto import TipoMateriaPrimaResponseDto

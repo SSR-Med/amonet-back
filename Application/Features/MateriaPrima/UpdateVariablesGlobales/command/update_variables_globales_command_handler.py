@@ -1,34 +1,35 @@
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from Application.Features.MateriaPrima.GetAllVariablesGlobales.dtos import (
     VariablesGlobalesMateriaPrimaResponseDto,
 )
 from Application.Features.MateriaPrima.GetAllVariablesGlobales.mappers import (
     VariablesGlobalesMateriaPrimaMapper,
 )
-from Application.Features.MateriaPrima.UpdateVariablesGlobales.dtos import (
-    UpdateVariablesGlobalesCommandDto,
+from Application.Features.MateriaPrima.UpdateVariablesGlobales.command import (
+    UpdateVariablesGlobalesCommand,
 )
 from Application.Features.MateriaPrima.UpdateVariablesGlobales.mappers import (
     UpdateVariablesGlobalesMapper,
 )
 from core.exceptions import ConflictException, NotFoundException
-from core.interfaces import IRepository, IUnitOfWork
 from infrastructure.dataaccess.configurations import (
     VariablesGlobalesMateriaPrimaConfiguration,
 )
+from infrastructure.dataaccess.repository import Repository
+from infrastructure.dataaccess.unit_of_work import UnitOfWork
 
 
 class UpdateVariablesGlobalesCommandHandler:
 
-    def __init__(
-        self,
-        repository: IRepository[VariablesGlobalesMateriaPrimaConfiguration],
-        unit_of_work: IUnitOfWork,
-    ) -> None:
-        self._repository = repository
-        self._unit_of_work = unit_of_work
+    def __init__(self, session: AsyncSession) -> None:
+        self._repository = Repository(
+            session, VariablesGlobalesMateriaPrimaConfiguration
+        )
+        self._unit_of_work = UnitOfWork(session)
 
     async def handle(
-        self, command: UpdateVariablesGlobalesCommandDto
+        self, command: UpdateVariablesGlobalesCommand
     ) -> VariablesGlobalesMateriaPrimaResponseDto:
         command.nombre = command.nombre.strip().upper()
 
@@ -56,4 +57,5 @@ class UpdateVariablesGlobalesCommandHandler:
         model = UpdateVariablesGlobalesMapper.apply(model, command)
         await self._repository.update(model)
         await self._unit_of_work.commit()
+
         return VariablesGlobalesMateriaPrimaMapper.to_response(model)

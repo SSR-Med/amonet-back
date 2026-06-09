@@ -1,22 +1,23 @@
-from Application.Features.MateriaPrima.DeleteVariablesGlobales.dtos import (
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from Application.Features.MateriaPrima.DeleteVariablesGlobales.command import (
     DeleteVariablesGlobalesCommand,
 )
 from core.exceptions import NotFoundException
-from core.interfaces import IRepository, IUnitOfWork
 from infrastructure.dataaccess.configurations import (
     VariablesGlobalesMateriaPrimaConfiguration,
 )
+from infrastructure.dataaccess.repository import Repository
+from infrastructure.dataaccess.unit_of_work import UnitOfWork
 
 
 class DeleteVariablesGlobalesCommandHandler:
 
-    def __init__(
-        self,
-        repository: IRepository[VariablesGlobalesMateriaPrimaConfiguration],
-        unit_of_work: IUnitOfWork,
-    ) -> None:
-        self._repository = repository
-        self._unit_of_work = unit_of_work
+    def __init__(self, session: AsyncSession) -> None:
+        self._repository = Repository(
+            session, VariablesGlobalesMateriaPrimaConfiguration
+        )
+        self._unit_of_work = UnitOfWork(session)
 
     async def handle(self, command: DeleteVariablesGlobalesCommand) -> None:
         model = await self._repository.first_or_default(

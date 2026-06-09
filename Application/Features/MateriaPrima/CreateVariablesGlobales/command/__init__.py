@@ -1,3 +1,2 @@
-from .create_variables_globales_command_handler import (
-    CreateVariablesGlobalesCommandHandler,
-)
+from .create_variables_globales_command import CreateVariablesGlobalesCommand
+from .create_variables_globales_command_handler import CreateVariablesGlobalesCommandHandler

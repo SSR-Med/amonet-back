@@ -1,25 +1,26 @@
 from typing import List
 
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from Application.Features.MateriaPrima.GetAllTiposUnidad.dtos import (
-    GetAllTiposUnidadQuery,
     TipoUnidadResponseDto,
 )
 from Application.Features.MateriaPrima.GetAllTiposUnidad.mappers import (
     TipoUnidadMapper,
 )
-from core.interfaces import IRepository
+from Application.Features.MateriaPrima.GetAllTiposUnidad.query import (
+    GetAllTiposUnidadQuery,
+)
 from infrastructure.dataaccess.configurations import (
     CatalogoTipoUnidadConfiguration,
 )
+from infrastructure.dataaccess.repository import Repository
 
 
 class GetAllTiposUnidadQueryHandler:
 
-    def __init__(
-        self,
-        repository: IRepository[CatalogoTipoUnidadConfiguration],
-    ) -> None:
-        self._repository = repository
+    def __init__(self, session: AsyncSession) -> None:
+        self._repository = Repository(session, CatalogoTipoUnidadConfiguration)
 
     async def handle(
         self, query: GetAllTiposUnidadQuery

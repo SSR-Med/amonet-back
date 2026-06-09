@@ -1,5 +1,5 @@
-from Application.Features.Marca.UpdateMarca.dtos import (
-    UpdateMarcaCommandDto,
+from Application.Features.Marca.UpdateMarca.command import (
+    UpdateMarcaCommand,
 )
 from infrastructure.dataaccess.configurations import MarcaConfiguration
 
@@ -9,7 +9,7 @@ class UpdateMarcaMapper:
     @staticmethod
     def apply(
         model: MarcaConfiguration,
-        dto: UpdateMarcaCommandDto,
+        dto: UpdateMarcaCommand,
     ) -> MarcaConfiguration:
         model.nombre = dto.nombre
         return model

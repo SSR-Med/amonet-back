@@ -1,3 +1,2 @@
-from .update_variables_globales_command_handler import (
-    UpdateVariablesGlobalesCommandHandler,
-)
+from .update_variables_globales_command import UpdateVariablesGlobalesCommand
+from .update_variables_globales_command_handler import UpdateVariablesGlobalesCommandHandler

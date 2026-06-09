@@ -1,4 +1,4 @@
-from typing import Callable, Generic, List, Optional, Tuple, Type, TypeVar
+from typing import Any, Callable, Generic, List, Optional, Tuple, Type, TypeVar
 
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -19,6 +19,7 @@ class Repository(IRepository, Generic[T]):
         page: int = 1,
         page_size: int = 20,
         where: Optional[Callable] = None,
+        loader_options: Optional[List[Any]] = None,
     ) -> Tuple[List[T], int, int, int]:
         query = select(self._model)
         count_query = select(func.count()).select_from(self._model)
@@ -26,6 +27,9 @@ class Repository(IRepository, Generic[T]):
         if where:
             query = where(query)
             count_query = where(count_query)
+
+        if loader_options:
+            query = query.options(*loader_options)
 
         total_result = await self._session.execute(count_query)
         total_items = total_result.scalar_one()

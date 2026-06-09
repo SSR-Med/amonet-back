@@ -1,5 +1,5 @@
 from pydantic import BaseModel
 
 
-class CreateMarcaCommandDto(BaseModel):
+class CreateMarcaCommand(BaseModel):
     nombre: str

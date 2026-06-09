@@ -1,1 +1,2 @@
+from .delete_marca_command import DeleteMarcaCommand
 from .delete_marca_command_handler import DeleteMarcaCommandHandler
