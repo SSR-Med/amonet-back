@@ -1,0 +1,3 @@
+from .get_all_tipos_materia_prima_query_handler import (
+    GetAllTiposMateriaPrimaQueryHandler,
+)

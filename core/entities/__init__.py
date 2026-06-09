@@ -1,2 +1,3 @@
+from .catalogo_tipo_materia_prima import CatalogoTipoMateriaPrima
 from .marca import Marca
 from .variables_globales_materia_prima import VariablesGlobalesMateriaPrima
