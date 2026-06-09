@@ -10,7 +10,7 @@ class SettingsService(BaseSettings):
         extra="ignore",
     )
 
-    APP_NAME: str = "FastAPI Hexagonal"
+    APP_NAME: str = "Amonet Backend documentation"
     DEBUG: bool = True
     DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/myapp"
     PORT: int = 8000

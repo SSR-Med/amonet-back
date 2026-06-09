@@ -1,0 +1,1 @@
+from .materia_prima_controller import router as materia_prima_router

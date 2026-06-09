@@ -4,6 +4,7 @@ import uvicorn
 from fastapi import FastAPI
 
 from api.configurations import register_exception_handlers
+from api.controllers import materia_prima_router
 from infrastructure.dataaccess import init_db
 from infrastructure.services import get_settings
 
@@ -24,6 +25,8 @@ def create_app() -> FastAPI:
     )
 
     register_exception_handlers(app)
+
+    app.include_router(materia_prima_router, prefix="/api/v1")
 
     return app
 

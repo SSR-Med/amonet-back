@@ -10,7 +10,11 @@ async_session_maker = None
 async def init_db() -> None:
     global engine, async_session_maker
     settings = get_settings()
-    engine = create_async_engine(settings.DATABASE_URL, echo=settings.DEBUG)
+    engine = create_async_engine(
+        settings.DATABASE_URL,
+        echo=settings.DEBUG,
+        connect_args={"ssl": "require"},
+    )
     async_session_maker = async_sessionmaker(
         engine, class_=AsyncSession, expire_on_commit=False
     )

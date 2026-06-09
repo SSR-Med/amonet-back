@@ -1,7 +1,6 @@
-from dataclasses import dataclass
+from pydantic import BaseModel, Field
 
 
-@dataclass
-class PaginationQuery:
-    page: int = 1
-    page_size: int = 20
+class PaginationQuery(BaseModel):
+    page: int = Field(default=1, ge=1)
+    page_size: int = Field(default=20, ge=1, le=100)
