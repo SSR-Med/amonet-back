@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from Application.Features.MateriaPrima.GetAllVariablesGlobales.dtos import (
@@ -29,24 +31,24 @@ class UpdateVariablesGlobalesCommandHandler:
         self._unit_of_work = UnitOfWork(session)
 
     async def handle(
-        self, command: UpdateVariablesGlobalesCommand
+        self, id: UUID, command: UpdateVariablesGlobalesCommand
     ) -> VariablesGlobalesMateriaPrimaResponseDto:
         command.nombre = command.nombre.strip().upper()
 
         model = await self._repository.first_or_default(
             lambda q: q.where(
                 VariablesGlobalesMateriaPrimaConfiguration.id_amonet_variable_materia_prima
-                == command.id
+                == id
             )
         )
         if model is None:
-            raise NotFoundException("VariablesGlobalesMateriaPrima", str(command.id))
+            raise NotFoundException("VariablesGlobalesMateriaPrima", str(id))
 
         existing = await self._repository.first_or_default(
             lambda q: q.where(
                 VariablesGlobalesMateriaPrimaConfiguration.nombre == command.nombre,
                 VariablesGlobalesMateriaPrimaConfiguration.id_amonet_variable_materia_prima
-                != command.id,
+                != id,
             )
         )
         if existing is not None:

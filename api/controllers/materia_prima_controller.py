@@ -73,8 +73,7 @@ async def update_materia_prima(
     session: AsyncSession = Depends(get_async_session),
 ):
     handler = UpdateMateriaPrimaCommandHandler(session)
-    command.id = id
-    return await handler.handle(command)
+    return await handler.handle(id, command)
 
 
 @router.delete("/{id}", status_code=204)
@@ -127,8 +126,7 @@ async def update(
     session: AsyncSession = Depends(get_async_session),
 ):
     handler = UpdateVariablesGlobalesCommandHandler(session)
-    command.id = id
-    return await handler.handle(command)
+    return await handler.handle(id, command)
 
 
 @router.delete("/variables_globales/{id}", status_code=204)

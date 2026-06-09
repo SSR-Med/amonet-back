@@ -49,8 +49,7 @@ async def update(
     session: AsyncSession = Depends(get_async_session),
 ):
     handler = UpdateMarcaCommandHandler(session)
-    command.id = id
-    return await handler.handle(command)
+    return await handler.handle(id, command)
 
 
 @router.delete("/{id}", status_code=204)

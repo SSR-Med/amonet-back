@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from Application.Features.MateriaPrima.GetAllMateriaPrima.dtos import (
@@ -35,22 +37,22 @@ class UpdateMateriaPrimaCommandHandler:
         self._unit_of_work = UnitOfWork(session)
 
     async def handle(
-        self, command: UpdateMateriaPrimaCommand
+        self, id: UUID, command: UpdateMateriaPrimaCommand
     ) -> MateriaPrimaResponseDto:
         command.nombre = command.nombre.strip().upper()
 
         model = await self._repository.first_or_default(
             lambda q: q.where(
-                MateriaPrimaConfiguration.id_amonet_materia_prima == command.id
+                MateriaPrimaConfiguration.id_amonet_materia_prima == id
             )
         )
         if model is None:
-            raise NotFoundException("MateriaPrima", str(command.id))
+            raise NotFoundException("MateriaPrima", str(id))
 
         existing = await self._repository.first_or_default(
             lambda q: q.where(
                 MateriaPrimaConfiguration.nombre == command.nombre,
-                MateriaPrimaConfiguration.id_amonet_materia_prima != command.id,
+                MateriaPrimaConfiguration.id_amonet_materia_prima != id,
             )
         )
         if existing is not None:

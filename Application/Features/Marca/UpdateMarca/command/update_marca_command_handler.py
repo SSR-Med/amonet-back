@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from Application.Features.Marca.GetAllMarcas.dtos import (
@@ -25,20 +27,20 @@ class UpdateMarcaCommandHandler:
         self._unit_of_work = UnitOfWork(session)
 
     async def handle(
-        self, command: UpdateMarcaCommand
+        self, id: UUID, command: UpdateMarcaCommand
     ) -> MarcaResponseDto:
         command.nombre = command.nombre.strip().upper()
 
         model = await self._repository.first_or_default(
-            lambda q: q.where(MarcaConfiguration.id_amonet_marca == command.id)
+            lambda q: q.where(MarcaConfiguration.id_amonet_marca == id)
         )
         if model is None:
-            raise NotFoundException("Marca", str(command.id))
+            raise NotFoundException("Marca", str(id))
 
         existing = await self._repository.first_or_default(
             lambda q: q.where(
                 MarcaConfiguration.nombre == command.nombre,
-                MarcaConfiguration.id_amonet_marca != command.id,
+                MarcaConfiguration.id_amonet_marca != id,
             )
         )
         if existing is not None:
