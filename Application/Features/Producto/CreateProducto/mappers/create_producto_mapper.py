@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from Application.Features.Producto.CreateProducto.dtos import (
+from Application.Features.Producto.CreateProducto.command import (
     CreateProductoCommand,
 )
 from infrastructure.dataaccess.configurations import (

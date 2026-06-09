@@ -1,1 +1,2 @@
+from .create_producto_command import CreateProductoCommand
 from .create_producto_command_handler import CreateProductoCommandHandler

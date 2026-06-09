@@ -1,8 +1,6 @@
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from Application.Features.Producto.CreateProducto.dtos import (
+from Application.Features.Producto.CreateProducto.command import (
     CreateProductoCommand,
 )
 from Application.Features.Producto.CreateProducto.mappers import (
@@ -27,11 +25,13 @@ from infrastructure.dataaccess.unit_of_work import UnitOfWork
 
 class CreateProductoCommandHandler:
 
-    def __init__(self, session: AsyncSession) -> None:
-        self._session = session
+    def __init__(self, session) -> None:
         self._repository = Repository(session, ProductoConfiguration)
         self._marca_repo = Repository(session, MarcaConfiguration)
         self._materia_repo = Repository(session, MateriaPrimaConfiguration)
+        self._relacion_repo = Repository(
+            session, ProductoMateriaPrimaConfiguration
+        )
         self._unit_of_work = UnitOfWork(session)
 
     async def handle(
@@ -80,21 +80,19 @@ class CreateProductoCommandHandler:
             producto.id_amonet_producto, command
         )
         for rel in relaciones:
-            self._session.add(rel)
+            await self._relacion_repo.create(rel)
 
         await self._unit_of_work.commit()
 
-        stmt = (
-            select(ProductoConfiguration)
-            .where(ProductoConfiguration.id_amonet_producto == producto.id_amonet_producto)
-            .options(
+        loaded = await self._repository.first_or_default(
+            lambda q: q.where(
+                ProductoConfiguration.id_amonet_producto == producto.id_amonet_producto
+            ).options(
                 selectinload(ProductoConfiguration.marca),
                 selectinload(ProductoConfiguration.materias_primas).selectinload(
                     ProductoMateriaPrimaConfiguration.materia_prima
                 ),
             )
         )
-        result = await self._session.execute(stmt)
-        loaded = result.scalar_one()
 
         return ProductoMapper.to_response(loaded)

@@ -2,7 +2,7 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
-from Application.Features.Producto.CreateProducto.dtos.materia_prima_en_producto_dto import (
+from Application.Features.Producto.CreateProducto.dtos import (
     MateriaPrimaEnProductoDto,
 )
 

@@ -1,2 +1,1 @@
-from .create_producto_command import CreateProductoCommand
 from .materia_prima_en_producto_dto import MateriaPrimaEnProductoDto
