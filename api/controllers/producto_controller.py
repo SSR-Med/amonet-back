@@ -13,9 +13,11 @@ from Application.Features.Producto.DeleteProducto.command import (
 )
 from Application.Features.Producto.GetAllProductos.query import (
     GetAllProductosQuery,
-)
-from Application.Features.Producto.GetAllProductos.query import (
     GetAllProductosQueryHandler,
+)
+from Application.Features.Producto.UpdateProducto.command import (
+    UpdateProductoCommand,
+    UpdateProductoCommandHandler,
 )
 from infrastructure.dataaccess import get_async_session
 
@@ -38,6 +40,16 @@ async def create(
 ):
     handler = CreateProductoCommandHandler(session)
     return await handler.handle(command)
+
+
+@router.put("/{id}")
+async def update(
+    id: UUID,
+    command: UpdateProductoCommand,
+    session: AsyncSession = Depends(get_async_session),
+):
+    handler = UpdateProductoCommandHandler(session)
+    return await handler.handle(id, command)
 
 
 @router.delete("/{id}", status_code=204)

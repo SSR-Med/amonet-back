@@ -1,0 +1,2 @@
+from .update_producto_command import UpdateProductoCommand
+from .update_producto_command_handler import UpdateProductoCommandHandler

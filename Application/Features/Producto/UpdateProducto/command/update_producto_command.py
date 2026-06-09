@@ -1,0 +1,14 @@
+from uuid import UUID
+
+from pydantic import BaseModel
+
+from Application.Features.Producto.CreateProducto.dtos import (
+    MateriaPrimaEnProductoDto,
+)
+
+
+class UpdateProductoCommand(BaseModel):
+    codigo: str
+    nombre: str
+    id_amonet_marca: UUID
+    materias_primas: list[MateriaPrimaEnProductoDto] = []
