@@ -12,12 +12,14 @@ from Application.Features.Producto.GetAllProductos.dtos import (
 from Application.Features.Producto.GetAllProductos.mappers import (
     ProductoMapper,
 )
+from Application.Features.Producto.validators import FormulaValidator
 from core.exceptions import ConflictException
 from infrastructure.dataaccess.configurations import (
     MarcaConfiguration,
     MateriaPrimaConfiguration,
     ProductoConfiguration,
     ProductoMateriaPrimaConfiguration,
+    VariablesGlobalesMateriaPrimaConfiguration,
 )
 from infrastructure.dataaccess.repository import Repository
 from infrastructure.dataaccess.unit_of_work import UnitOfWork
@@ -32,6 +34,9 @@ class CreateProductoCommandHandler:
         self._relacion_repo = Repository(
             session, ProductoMateriaPrimaConfiguration
         )
+        self._formula_validator = FormulaValidator(
+            Repository(session, VariablesGlobalesMateriaPrimaConfiguration)
+        )
         self._unit_of_work = UnitOfWork(session)
 
     async def handle(
@@ -39,6 +44,10 @@ class CreateProductoCommandHandler:
     ) -> ProductoResponseDto:
         command.codigo = command.codigo.strip().upper()
         command.nombre = command.nombre.strip().upper()
+
+        for mp in command.materias_primas:
+            if mp.formula:
+                await self._formula_validator.validate(mp.formula)
 
         existing = await self._repository.first_or_default(
             lambda q: q.where(
