@@ -1,5 +1,3 @@
-from uuid import UUID
-
 from Application.Features.Marca.GetAllMarcas.dtos import (
     MarcaResponseDto,
 )
@@ -28,28 +26,28 @@ class UpdateMarcaCommandHandler:
         self._unit_of_work = unit_of_work
 
     async def handle(
-        self, id: UUID, dto: UpdateMarcaCommandDto
+        self, command: UpdateMarcaCommandDto
     ) -> MarcaResponseDto:
-        dto.nombre = dto.nombre.strip().upper()
+        command.nombre = command.nombre.strip().upper()
 
         model = await self._repository.first_or_default(
-            lambda q: q.where(MarcaConfiguration.id_amonet_marca == id)
+            lambda q: q.where(MarcaConfiguration.id_amonet_marca == command.id)
         )
         if model is None:
-            raise NotFoundException("Marca", str(id))
+            raise NotFoundException("Marca", str(command.id))
 
         existing = await self._repository.first_or_default(
             lambda q: q.where(
-                MarcaConfiguration.nombre == dto.nombre,
-                MarcaConfiguration.id_amonet_marca != id,
+                MarcaConfiguration.nombre == command.nombre,
+                MarcaConfiguration.id_amonet_marca != command.id,
             )
         )
         if existing is not None:
             raise ConflictException(
-                f"Marca '{dto.nombre}' already exists"
+                f"Marca '{command.nombre}' already exists"
             )
 
-        model = UpdateMarcaMapper.apply(model, dto)
+        model = UpdateMarcaMapper.apply(model, command)
         await self._repository.update(model)
         await self._unit_of_work.commit()
         return MarcaMapper.to_response(model)

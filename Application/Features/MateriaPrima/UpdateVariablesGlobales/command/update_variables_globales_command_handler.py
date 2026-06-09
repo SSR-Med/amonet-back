@@ -1,5 +1,3 @@
-from uuid import UUID
-
 from Application.Features.MateriaPrima.GetAllVariablesGlobales.dtos import (
     VariablesGlobalesMateriaPrimaResponseDto,
 )
@@ -30,32 +28,32 @@ class UpdateVariablesGlobalesCommandHandler:
         self._unit_of_work = unit_of_work
 
     async def handle(
-        self, id: UUID, dto: UpdateVariablesGlobalesCommandDto
+        self, command: UpdateVariablesGlobalesCommandDto
     ) -> VariablesGlobalesMateriaPrimaResponseDto:
-        dto.nombre = dto.nombre.strip().upper()
+        command.nombre = command.nombre.strip().upper()
 
         model = await self._repository.first_or_default(
             lambda q: q.where(
                 VariablesGlobalesMateriaPrimaConfiguration.id_amonet_variable_materia_prima
-                == id
+                == command.id
             )
         )
         if model is None:
-            raise NotFoundException("VariablesGlobalesMateriaPrima", str(id))
+            raise NotFoundException("VariablesGlobalesMateriaPrima", str(command.id))
 
         existing = await self._repository.first_or_default(
             lambda q: q.where(
-                VariablesGlobalesMateriaPrimaConfiguration.nombre == dto.nombre,
+                VariablesGlobalesMateriaPrimaConfiguration.nombre == command.nombre,
                 VariablesGlobalesMateriaPrimaConfiguration.id_amonet_variable_materia_prima
-                != id,
+                != command.id,
             )
         )
         if existing is not None:
             raise ConflictException(
-                f"Variable global materia prima '{dto.nombre}' already exists"
+                f"Variable global materia prima '{command.nombre}' already exists"
             )
 
-        model = UpdateVariablesGlobalesMapper.apply(model, dto)
+        model = UpdateVariablesGlobalesMapper.apply(model, command)
         await self._repository.update(model)
         await self._unit_of_work.commit()
         return VariablesGlobalesMateriaPrimaMapper.to_response(model)

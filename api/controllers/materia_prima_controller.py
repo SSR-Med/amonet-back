@@ -12,8 +12,17 @@ from Application.Features.MateriaPrima.CreateVariablesGlobales.dtos import (
 from Application.Features.MateriaPrima.DeleteVariablesGlobales.command import (
     DeleteVariablesGlobalesCommandHandler,
 )
+from Application.Features.MateriaPrima.DeleteVariablesGlobales.dtos import (
+    DeleteVariablesGlobalesCommand,
+)
+from Application.Features.MateriaPrima.GetAllTiposMateriaPrima.dtos import (
+    GetAllTiposMateriaPrimaQuery,
+)
 from Application.Features.MateriaPrima.GetAllTiposMateriaPrima.query import (
     GetAllTiposMateriaPrimaQueryHandler,
+)
+from Application.Features.MateriaPrima.GetAllTiposUnidad.dtos import (
+    GetAllTiposUnidadQuery,
 )
 from Application.Features.MateriaPrima.GetAllTiposUnidad.query import (
     GetAllTiposUnidadQueryHandler,
@@ -48,7 +57,7 @@ async def get_tipos(
 ):
     repository = Repository(session, CatalogoTipoMateriaPrimaConfiguration)
     handler = GetAllTiposMateriaPrimaQueryHandler(repository)
-    return await handler.handle()
+    return await handler.handle(GetAllTiposMateriaPrimaQuery())
 
 
 @router.get("/tipos_unidad")
@@ -57,7 +66,7 @@ async def get_tipos_unidad(
 ):
     repository = Repository(session, CatalogoTipoUnidadConfiguration)
     handler = GetAllTiposUnidadQueryHandler(repository)
-    return await handler.handle()
+    return await handler.handle(GetAllTiposUnidadQuery())
 
 
 @router.get("/variables_globales")
@@ -90,7 +99,8 @@ async def update(
     repository = Repository(session, VariablesGlobalesMateriaPrimaConfiguration)
     unit_of_work = UnitOfWork(session)
     handler = UpdateVariablesGlobalesCommandHandler(repository, unit_of_work)
-    return await handler.handle(id, dto)
+    dto.id = id
+    return await handler.handle(dto)
 
 
 @router.delete("/variables_globales/{id}", status_code=204)
@@ -101,4 +111,4 @@ async def delete(
     repository = Repository(session, VariablesGlobalesMateriaPrimaConfiguration)
     unit_of_work = UnitOfWork(session)
     handler = DeleteVariablesGlobalesCommandHandler(repository, unit_of_work)
-    await handler.handle(id)
+    await handler.handle(DeleteVariablesGlobalesCommand(id=id))

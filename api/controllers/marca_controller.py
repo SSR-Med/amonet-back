@@ -12,6 +12,9 @@ from Application.Features.Marca.CreateMarca.dtos import (
 from Application.Features.Marca.DeleteMarca.command import (
     DeleteMarcaCommandHandler,
 )
+from Application.Features.Marca.DeleteMarca.dtos import (
+    DeleteMarcaCommand,
+)
 from Application.Features.Marca.GetAllMarcas.dtos import (
     GetAllMarcasQueryDto,
 )
@@ -62,7 +65,8 @@ async def update(
     repository = Repository(session, MarcaConfiguration)
     unit_of_work = UnitOfWork(session)
     handler = UpdateMarcaCommandHandler(repository, unit_of_work)
-    return await handler.handle(id, dto)
+    dto.id = id
+    return await handler.handle(dto)
 
 
 @router.delete("/{id}", status_code=204)
@@ -73,4 +77,4 @@ async def delete(
     repository = Repository(session, MarcaConfiguration)
     unit_of_work = UnitOfWork(session)
     handler = DeleteMarcaCommandHandler(repository, unit_of_work)
-    await handler.handle(id)
+    await handler.handle(DeleteMarcaCommand(id=id))

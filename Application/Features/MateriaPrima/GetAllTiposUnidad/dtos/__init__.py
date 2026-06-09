@@ -1,1 +1,2 @@
+from .get_all_tipos_unidad_query import GetAllTiposUnidadQuery
 from .tipo_unidad_response_dto import TipoUnidadResponseDto

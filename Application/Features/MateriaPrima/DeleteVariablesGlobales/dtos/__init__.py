@@ -1,0 +1,1 @@
+from .delete_variables_globales_command import DeleteVariablesGlobalesCommand
