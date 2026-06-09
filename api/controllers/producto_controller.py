@@ -11,7 +11,7 @@ from Application.Features.Producto.DeleteProducto.command import (
     DeleteProductoCommand,
     DeleteProductoCommandHandler,
 )
-from Application.Features.Producto.GetAllProductos.dtos import (
+from Application.Features.Producto.GetAllProductos.query import (
     GetAllProductosQuery,
 )
 from Application.Features.Producto.GetAllProductos.query import (

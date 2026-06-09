@@ -1,1 +1,2 @@
+from .get_all_productos_query import GetAllProductosQuery
 from .get_all_productos_query_handler import GetAllProductosQueryHandler

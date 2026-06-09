@@ -1,7 +1,9 @@
 from sqlalchemy.orm import selectinload
 
-from Application.Features.Producto.GetAllProductos.dtos import (
+from Application.Features.Producto.GetAllProductos.query import (
     GetAllProductosQuery,
+)
+from Application.Features.Producto.GetAllProductos.dtos import (
     ProductoResponseDto,
 )
 from Application.Features.Producto.GetAllProductos.mappers import (

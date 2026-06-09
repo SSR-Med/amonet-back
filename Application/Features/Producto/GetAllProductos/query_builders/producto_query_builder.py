@@ -5,7 +5,7 @@ from sqlalchemy import func
 from infrastructure.dataaccess.configurations import ProductoConfiguration
 from infrastructure.query_builder import QueryBuilder
 
-from Application.Features.Producto.GetAllProductos.dtos import (
+from Application.Features.Producto.GetAllProductos.query import (
     GetAllProductosQuery,
 )
 
