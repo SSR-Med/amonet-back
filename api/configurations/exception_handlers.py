@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from core.exceptions import (
+    AuthenticationException,
     BadRequestException,
     ConflictException,
     DomainException,
@@ -30,6 +31,13 @@ def register_exception_handlers(app: FastAPI) -> None:
     async def bad_request_handler(request: Request, exc: BadRequestException) -> JSONResponse:
         return JSONResponse(
             status_code=400,
+            content={"error": exc.code, "message": exc.message},
+        )
+
+    @app.exception_handler(AuthenticationException)
+    async def authentication_handler(request: Request, exc: AuthenticationException) -> JSONResponse:
+        return JSONResponse(
+            status_code=401,
             content={"error": exc.code, "message": exc.message},
         )
 

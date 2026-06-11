@@ -18,6 +18,7 @@ class UsuarioMapper:
             documento=model.documento,
             nombre=model.nombre,
             rol=model.rol,
+            activo=model.activo,
         )
 
     @staticmethod

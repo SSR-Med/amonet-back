@@ -1,6 +1,6 @@
 from typing import Callable
 
-from sqlalchemy import func
+from sqlalchemy import func, true as sa_true
 
 from infrastructure.dataaccess.configurations import UsuarioConfiguration
 from infrastructure.query_builder import QueryBuilder
@@ -33,6 +33,12 @@ class UsuarioQueryBuilder:
                 ).like(
                     f"%{self._dto.rol.strip().upper()}%"
                 ),
+            )
+            .and_if_not_none(
+                self._dto.activo,
+                lambda: UsuarioConfiguration.activo == sa_true()
+                if self._dto.activo
+                else UsuarioConfiguration.activo == False,
             )
             .build()
         )

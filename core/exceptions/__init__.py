@@ -1,3 +1,4 @@
+from .authentication import AuthenticationException
 from .bad_request import BadRequestException
 from .base import DomainException
 from .conflict import ConflictException

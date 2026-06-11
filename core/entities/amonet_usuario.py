@@ -8,4 +8,5 @@ class Usuario:
     documento: str = ""
     nombre: str = ""
     rol: str = "OPERARIO"
+    activo: bool = True
     password: str = ""

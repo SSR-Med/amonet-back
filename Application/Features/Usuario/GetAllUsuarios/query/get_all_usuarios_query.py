@@ -6,3 +6,4 @@ from core.dtos import PaginationQuery
 class GetAllUsuariosQuery(PaginationQuery):
     documento: Optional[str] = None
     rol: Optional[str] = None
+    activo: Optional[bool] = None

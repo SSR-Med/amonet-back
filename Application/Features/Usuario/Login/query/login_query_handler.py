@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from Application.Features.Usuario.Login.dtos import LoginResponseDto
 from Application.Features.Usuario.Login.query import LoginQuery
 from core.dtos import JwtUserDto
-from core.exceptions import UnauthorizedException
+from core.exceptions import AuthenticationException, UnauthorizedException
 from infrastructure.dataaccess.configurations import UsuarioConfiguration
 from infrastructure.services import JwtService, PasswordService
 
@@ -25,6 +25,9 @@ class LoginQueryHandler:
 
         if user is None or not PasswordService.verify(query.password, user.password):
             raise UnauthorizedException("Invalid credentials")
+
+        if not user.activo:
+            raise AuthenticationException("User is inactive")
 
         jwt_user = JwtUserDto(
             user_id=user.id_amonet_usuario,

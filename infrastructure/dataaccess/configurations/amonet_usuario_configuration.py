@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from sqlalchemy import String, text
+from sqlalchemy import Boolean, String, text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -17,5 +17,8 @@ class UsuarioConfiguration(Base):
     nombre: Mapped[str] = mapped_column(String(255), nullable=False)
     rol: Mapped[str] = mapped_column(
         String(100), nullable=False, server_default=text("'OPERARIO'")
+    )
+    activo: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, default=True, server_default=text("true")
     )
     password: Mapped[str] = mapped_column(String(255), nullable=False)
