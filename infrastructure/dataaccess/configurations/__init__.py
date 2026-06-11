@@ -1,3 +1,4 @@
+from .amonet_usuario_configuration import UsuarioConfiguration
 from .catalogo_tipo_materia_prima_configuration import (
     CatalogoTipoMateriaPrimaConfiguration,
 )

@@ -4,4 +4,5 @@ from .marca import Marca
 from .materia_prima import MateriaPrima
 from .producto import Producto
 from .producto_materia_prima import ProductoMateriaPrima
+from .amonet_usuario import Usuario
 from .variables_globales_materia_prima import VariablesGlobalesMateriaPrima
