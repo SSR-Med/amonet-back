@@ -15,6 +15,8 @@ class SettingsService(BaseSettings):
     DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/myapp"
     PORT: int = 8000
     CORS_ORIGINS: str = "http://localhost:3000,http://localhost:3001"
+    JWT_SECRET: str = "supersecretkey"
+    JWT_EXPIRATION_HOURS: int = 8
 
 
 @lru_cache

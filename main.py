@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.configurations import register_exception_handlers
-from api.controllers import marca_router, materia_prima_router, producto_router
+from api.controllers import marca_router, materia_prima_router, producto_router, usuario_router
 from infrastructure.dataaccess import init_db
 from infrastructure.services import get_settings
 
@@ -38,6 +38,7 @@ def create_app() -> FastAPI:
     app.include_router(marca_router, prefix="/api/v1")
     app.include_router(materia_prima_router, prefix="/api/v1")
     app.include_router(producto_router, prefix="/api/v1")
+    app.include_router(usuario_router, prefix="/api/v1")
 
     return app
 

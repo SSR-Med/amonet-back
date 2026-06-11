@@ -6,6 +6,7 @@ from core.exceptions import (
     ConflictException,
     DomainException,
     NotFoundException,
+    UnauthorizedException,
 )
 
 
@@ -29,6 +30,13 @@ def register_exception_handlers(app: FastAPI) -> None:
     async def bad_request_handler(request: Request, exc: BadRequestException) -> JSONResponse:
         return JSONResponse(
             status_code=400,
+            content={"error": exc.code, "message": exc.message},
+        )
+
+    @app.exception_handler(UnauthorizedException)
+    async def unauthorized_handler(request: Request, exc: UnauthorizedException) -> JSONResponse:
+        return JSONResponse(
+            status_code=403,
             content={"error": exc.code, "message": exc.message},
         )
 
