@@ -1,0 +1,2 @@
+class GetCurrentUsuarioQuery:
+    pass

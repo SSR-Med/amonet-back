@@ -6,6 +6,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from api.dependencies import get_current_user, require_roles
 from core.constants import ADMIN
 from core.dtos import CurrentUserDto
+from Application.Features.Usuario.GetCurrentUsuario.query import (
+    GetCurrentUsuarioQuery,
+    GetCurrentUsuarioQueryHandler,
+)
 from Application.Features.Usuario.CreateUsuario.command import (
     CreateUsuarioCommand,
     CreateUsuarioCommandHandler,
@@ -43,6 +47,15 @@ async def create(
 ):
     handler = CreateUsuarioCommandHandler(session)
     return await handler.handle(command)
+
+
+@router.get("/me")
+async def get_current(
+    session: AsyncSession = Depends(get_async_session),
+    current_user: CurrentUserDto = Depends(get_current_user),
+):
+    handler = GetCurrentUsuarioQueryHandler(session)
+    return await handler.handle(GetCurrentUsuarioQuery(), current_user)
 
 
 @router.get("/roles")

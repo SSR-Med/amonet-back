@@ -3,6 +3,9 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from api.dependencies import require_roles
+from core.constants import ADMIN
+from core.dtos import CurrentUserDto
 from Application.Features.Producto.CreateProducto.command import (
     CreateProductoCommand,
     CreateProductoCommandHandler,
@@ -37,6 +40,7 @@ async def get_all(
 async def create(
     command: CreateProductoCommand,
     session: AsyncSession = Depends(get_async_session),
+    current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
 ):
     handler = CreateProductoCommandHandler(session)
     return await handler.handle(command)
@@ -47,6 +51,7 @@ async def update(
     id: UUID,
     command: UpdateProductoCommand,
     session: AsyncSession = Depends(get_async_session),
+    current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
 ):
     handler = UpdateProductoCommandHandler(session)
     return await handler.handle(id, command)
@@ -56,6 +61,7 @@ async def update(
 async def delete(
     id: UUID,
     session: AsyncSession = Depends(get_async_session),
+    current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
 ):
     handler = DeleteProductoCommandHandler(session)
     await handler.handle(DeleteProductoCommand(id=id))

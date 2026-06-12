@@ -8,3 +8,4 @@ class UpdateUsuarioCommand(BaseModel):
     nombre: Optional[str] = None
     rol: Optional[str] = None
     password: Optional[str] = None
+    activo: Optional[bool] = None

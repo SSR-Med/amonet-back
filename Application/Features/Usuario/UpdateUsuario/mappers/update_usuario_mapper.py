@@ -21,6 +21,8 @@ class UpdateUsuarioMapper:
             model.nombre = dto.nombre
         if dto.rol is not None:
             model.rol = dto.rol
+        if dto.activo is not None:
+            model.activo = dto.activo
         if new_password is not None:
             model.password = new_password
         return model
