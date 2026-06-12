@@ -12,12 +12,14 @@ from Application.Features.MateriaPrima.GetAllVariablesGlobales.dtos import (
 from Application.Features.MateriaPrima.GetAllVariablesGlobales.mappers import (
     VariablesGlobalesMateriaPrimaMapper,
 )
+from core.dtos import AuditLogDto, CurrentUserDto
 from core.exceptions import ConflictException
 from infrastructure.dataaccess.configurations import (
     VariablesGlobalesMateriaPrimaConfiguration,
 )
 from infrastructure.dataaccess.repository import Repository
 from infrastructure.dataaccess.unit_of_work import UnitOfWork
+from infrastructure.services import AuditLogger
 
 
 class CreateVariablesGlobalesCommandHandler:
@@ -29,7 +31,7 @@ class CreateVariablesGlobalesCommandHandler:
         self._unit_of_work = UnitOfWork(session)
 
     async def handle(
-        self, command: CreateVariablesGlobalesCommand
+        self, command: CreateVariablesGlobalesCommand, current_user: CurrentUserDto
     ) -> VariablesGlobalesMateriaPrimaResponseDto:
         command.nombre = command.nombre.strip().upper()
 
@@ -46,5 +48,11 @@ class CreateVariablesGlobalesCommandHandler:
         model = CreateVariablesGlobalesMapper.to_model(command)
         await self._repository.create(model)
         await self._unit_of_work.commit()
+
+        AuditLogger.log(AuditLogDto(
+            usuario=current_user.documento,
+            feature=type(self).__name__,
+            datos=command.model_dump(),
+        ))
 
         return VariablesGlobalesMateriaPrimaMapper.to_response(model)

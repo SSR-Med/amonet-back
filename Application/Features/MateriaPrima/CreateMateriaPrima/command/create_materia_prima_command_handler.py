@@ -12,6 +12,7 @@ from Application.Features.MateriaPrima.GetAllMateriaPrima.dtos import (
 from Application.Features.MateriaPrima.GetAllMateriaPrima.mappers import (
     MateriaPrimaMapper,
 )
+from core.dtos import AuditLogDto, CurrentUserDto
 from core.exceptions import ConflictException
 from infrastructure.dataaccess.configurations import (
     CatalogoTipoMateriaPrimaConfiguration,
@@ -20,6 +21,7 @@ from infrastructure.dataaccess.configurations import (
 )
 from infrastructure.dataaccess.repository import Repository
 from infrastructure.dataaccess.unit_of_work import UnitOfWork
+from infrastructure.services import AuditLogger
 
 
 class CreateMateriaPrimaCommandHandler:
@@ -35,7 +37,7 @@ class CreateMateriaPrimaCommandHandler:
         self._unit_of_work = UnitOfWork(session)
 
     async def handle(
-        self, command: CreateMateriaPrimaCommand
+        self, command: CreateMateriaPrimaCommand, current_user: CurrentUserDto
     ) -> MateriaPrimaResponseDto:
         command.nombre = command.nombre.strip().upper()
 
@@ -68,5 +70,11 @@ class CreateMateriaPrimaCommandHandler:
         model = CreateMateriaPrimaMapper.to_model(command)
         await self._repository.create(model)
         await self._unit_of_work.commit()
+
+        AuditLogger.log(AuditLogDto(
+            usuario=current_user.documento,
+            feature=type(self).__name__,
+            datos=command.model_dump(),
+        ))
 
         return MateriaPrimaMapper.to_response(model)

@@ -14,6 +14,7 @@ from Application.Features.MateriaPrima.UpdateMateriaPrima.command import (
 from Application.Features.MateriaPrima.UpdateMateriaPrima.mappers import (
     UpdateMateriaPrimaMapper,
 )
+from core.dtos import AuditLogDto, CurrentUserDto
 from core.exceptions import ConflictException, NotFoundException
 from infrastructure.dataaccess.configurations import (
     CatalogoTipoMateriaPrimaConfiguration,
@@ -22,6 +23,7 @@ from infrastructure.dataaccess.configurations import (
 )
 from infrastructure.dataaccess.repository import Repository
 from infrastructure.dataaccess.unit_of_work import UnitOfWork
+from infrastructure.services import AuditLogger
 
 
 class UpdateMateriaPrimaCommandHandler:
@@ -37,7 +39,7 @@ class UpdateMateriaPrimaCommandHandler:
         self._unit_of_work = UnitOfWork(session)
 
     async def handle(
-        self, id: UUID, command: UpdateMateriaPrimaCommand
+        self, id: UUID, command: UpdateMateriaPrimaCommand, current_user: CurrentUserDto
     ) -> MateriaPrimaResponseDto:
         command.nombre = command.nombre.strip().upper()
 
@@ -81,5 +83,11 @@ class UpdateMateriaPrimaCommandHandler:
         model = UpdateMateriaPrimaMapper.apply(model, command)
         await self._repository.update(model)
         await self._unit_of_work.commit()
+
+        AuditLogger.log(AuditLogDto(
+            usuario=current_user.documento,
+            feature=type(self).__name__,
+            datos=command.model_dump(),
+        ))
 
         return MateriaPrimaMapper.to_response(model)

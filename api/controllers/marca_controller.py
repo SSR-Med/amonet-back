@@ -3,7 +3,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.dependencies import require_roles
+from api.dependencies import get_current_user, require_roles
 from core.constants import ADMIN
 from core.dtos import CurrentUserDto
 from Application.Features.Marca.CreateMarca.command import (
@@ -31,6 +31,7 @@ router = APIRouter(prefix="/marcas", tags=["Marcas"])
 async def get_all(
     query: GetAllMarcasQuery = Query(),
     session: AsyncSession = Depends(get_async_session),
+    current_user: CurrentUserDto = Depends(get_current_user),
 ):
     handler = GetAllMarcasQueryHandler(session)
     return await handler.handle(query)
@@ -43,7 +44,7 @@ async def create(
     current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
 ):
     handler = CreateMarcaCommandHandler(session)
-    return await handler.handle(command)
+    return await handler.handle(command, current_user)
 
 
 @router.put("/{id}")
@@ -54,7 +55,7 @@ async def update(
     current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
 ):
     handler = UpdateMarcaCommandHandler(session)
-    return await handler.handle(id, command)
+    return await handler.handle(id, command, current_user)
 
 
 @router.delete("/{id}", status_code=204)
@@ -64,4 +65,4 @@ async def delete(
     current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
 ):
     handler = DeleteMarcaCommandHandler(session)
-    await handler.handle(DeleteMarcaCommand(id=id))
+    await handler.handle(DeleteMarcaCommand(id=id), current_user)

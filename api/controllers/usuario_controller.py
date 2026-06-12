@@ -46,7 +46,7 @@ async def create(
     current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
 ):
     handler = CreateUsuarioCommandHandler(session)
-    return await handler.handle(command)
+    return await handler.handle(command, current_user)
 
 
 @router.get("/me")
@@ -61,6 +61,7 @@ async def get_current(
 @router.get("/roles")
 async def get_all_roles(
     session: AsyncSession = Depends(get_async_session),
+    current_user: CurrentUserDto = Depends(get_current_user),
 ):
     handler = GetAllRolesQueryHandler(session)
     return await handler.handle(GetAllRolesQuery())

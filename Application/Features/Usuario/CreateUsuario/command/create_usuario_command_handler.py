@@ -13,6 +13,7 @@ from Application.Features.Usuario.GetAllUsuarios.dtos import (
 from Application.Features.Usuario.GetAllUsuarios.mappers import (
     UsuarioMapper,
 )
+from core.dtos import AuditLogDto, CurrentUserDto
 from core.exceptions import BadRequestException, ConflictException
 from infrastructure.dataaccess.configurations import (
     CatalogoUsuarioRolConfiguration,
@@ -20,6 +21,7 @@ from infrastructure.dataaccess.configurations import (
 )
 from infrastructure.dataaccess.repository import Repository
 from infrastructure.dataaccess.unit_of_work import UnitOfWork
+from infrastructure.services import AuditLogger
 
 
 class CreateUsuarioCommandHandler:
@@ -30,7 +32,7 @@ class CreateUsuarioCommandHandler:
         self._session = session
 
     async def handle(
-        self, command: CreateUsuarioCommand
+        self, command: CreateUsuarioCommand, current_user: CurrentUserDto
     ) -> UsuarioResponseDto:
         command.nombre = command.nombre.strip().upper()
         command.documento = command.documento.strip()
@@ -59,5 +61,11 @@ class CreateUsuarioCommandHandler:
         model = CreateUsuarioMapper.to_model(command)
         await self._repository.create(model)
         await self._unit_of_work.commit()
+
+        AuditLogger.log(AuditLogDto(
+            usuario=current_user.documento,
+            feature=type(self).__name__,
+            datos=command.model_dump(),
+        ))
 
         return UsuarioMapper.to_response(model)

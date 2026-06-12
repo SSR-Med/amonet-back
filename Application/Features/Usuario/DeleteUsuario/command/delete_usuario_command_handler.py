@@ -5,11 +5,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from Application.Features.Usuario.DeleteUsuario.command import (
     DeleteUsuarioCommand,
 )
-from core.dtos import CurrentUserDto
+from core.dtos import AuditLogDto, CurrentUserDto
 from core.exceptions import NotFoundException, UnauthorizedException
 from infrastructure.dataaccess.configurations import UsuarioConfiguration
 from infrastructure.dataaccess.repository import Repository
 from infrastructure.dataaccess.unit_of_work import UnitOfWork
+from infrastructure.services import AuditLogger
 
 
 class DeleteUsuarioCommandHandler:
@@ -31,3 +32,9 @@ class DeleteUsuarioCommandHandler:
         model.activo = False
         await self._repository.update(model)
         await self._unit_of_work.commit()
+
+        AuditLogger.log(AuditLogDto(
+            usuario=current_user.documento,
+            feature=type(self).__name__,
+            datos=command.model_dump(),
+        ))

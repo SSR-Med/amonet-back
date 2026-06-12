@@ -21,6 +21,7 @@ from Application.Features.Producto.UpdateProducto.mappers import (
     UpdateProductoMapper,
 )
 from Application.Features.Producto.validators import FormulaValidator
+from core.dtos import AuditLogDto, CurrentUserDto
 from core.exceptions import ConflictException, NotFoundException
 from infrastructure.dataaccess.configurations import (
     MarcaConfiguration,
@@ -31,6 +32,7 @@ from infrastructure.dataaccess.configurations import (
 )
 from infrastructure.dataaccess.repository import Repository
 from infrastructure.dataaccess.unit_of_work import UnitOfWork
+from infrastructure.services import AuditLogger
 
 
 class UpdateProductoCommandHandler:
@@ -48,7 +50,7 @@ class UpdateProductoCommandHandler:
         self._unit_of_work = UnitOfWork(session)
 
     async def handle(
-        self, id: UUID, command: UpdateProductoCommand
+        self, id: UUID, command: UpdateProductoCommand, current_user: CurrentUserDto
     ) -> ProductoResponseDto:
         command.codigo = command.codigo.strip().upper()
         command.nombre = command.nombre.strip().upper()
@@ -123,5 +125,11 @@ class UpdateProductoCommandHandler:
                 ),
             )
         )
+
+        AuditLogger.log(AuditLogDto(
+            usuario=current_user.documento,
+            feature=type(self).__name__,
+            datos=command.model_dump(),
+        ))
 
         return ProductoMapper.to_response(loaded)
