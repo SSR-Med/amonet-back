@@ -1,0 +1,2 @@
+from .delete_usuario_command import DeleteUsuarioCommand
+from .delete_usuario_command_handler import DeleteUsuarioCommandHandler

@@ -1,5 +1,6 @@
 from .catalogo_tipo_materia_prima import CatalogoTipoMateriaPrima
 from .catalogo_tipo_unidad import CatalogoTipoUnidad
+from .catalogo_usuario_rol import CatalogoUsuarioRol
 from .marca import Marca
 from .materia_prima import MateriaPrima
 from .producto import Producto
