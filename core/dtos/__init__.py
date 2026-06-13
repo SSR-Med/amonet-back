@@ -1,4 +1,5 @@
 from .audit_log_dto import AuditLogDto
+from .log_dtos import LogItemDto
 from .object_storage_dtos import (
     ObjectStorageDownloadDto,
     ObjectStorageItemDto,

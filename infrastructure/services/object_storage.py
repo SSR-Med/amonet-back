@@ -30,17 +30,19 @@ class ObjectStorageService:
         key = f"{dto.ruta}/{dto.nombre_archivo}" if dto.ruta else dto.nombre_archivo
         self._client.put_object(Bucket=self._bucket, Key=key, Body=dto.archivo)
 
-    def list(self, dto: ObjectStorageListDto) -> List[ObjectStorageItemDto]:
+    def list(self, dto: ObjectStorageListDto, recursive: bool = False) -> List[ObjectStorageItemDto]:
         prefix = f"{dto.ruta}/" if dto.ruta else ""
-        resp = self._client.list_objects_v2(
-            Bucket=self._bucket, Prefix=prefix, Delimiter="/"
-        )
+        kwargs = {"Bucket": self._bucket, "Prefix": prefix}
+        if not recursive:
+            kwargs["Delimiter"] = "/"
+        resp = self._client.list_objects_v2(**kwargs)
 
         items: List[ObjectStorageItemDto] = []
-        for folder in resp.get("CommonPrefixes", []):
-            items.append(
-                ObjectStorageItemDto(nombre=folder["Prefix"], es_directorio=True)
-            )
+        if not recursive:
+            for folder in resp.get("CommonPrefixes", []):
+                items.append(
+                    ObjectStorageItemDto(nombre=folder["Prefix"], es_directorio=True)
+                )
         for obj in resp.get("Contents", []):
             nombre = obj["Key"].replace(prefix, "")
             if nombre:

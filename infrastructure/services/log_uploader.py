@@ -21,11 +21,15 @@ class LogUploader:
                 continue
 
             try:
+                fecha = filepath.stem
+                year, month, _ = fecha.split("-")
+                ruta = f"{S3_LOG_PREFIX}/{year}/{month}"
+
                 with open(filepath, "rb") as f:
                     content = f.read()
 
                 dto = ObjectStorageUploadDto(
-                    ruta=S3_LOG_PREFIX,
+                    ruta=ruta,
                     archivo=content,
                     nombre_archivo=filepath.name,
                 )
