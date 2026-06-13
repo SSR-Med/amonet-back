@@ -1,1 +1,3 @@
 ADMIN = "ADMIN"
+
+LOGS = "logs"

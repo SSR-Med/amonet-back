@@ -17,6 +17,11 @@ class SettingsService(BaseSettings):
     CORS_ORIGINS: str = "http://localhost:3000,http://localhost:3001"
     JWT_SECRET: str = "supersecretkey"
     JWT_EXPIRATION_HOURS: int = 8
+    S3_ENDPOINT: str = ""
+    S3_ACCESS_KEY: str = ""
+    S3_SECRET_KEY: str = ""
+    S3_REGION: str = "us-east-1"
+    S3_BUCKET: str = "amonet"
 
 
 @lru_cache

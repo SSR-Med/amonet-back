@@ -2,11 +2,12 @@ import json
 import os
 from datetime import date
 
+from core.constants import LOGS
 from core.dtos import AuditLogDto
 
 
 class AuditLogger:
-    LOG_DIR = "logs"
+    LOG_DIR = LOGS
 
     @staticmethod
     def log(entry: AuditLogDto) -> None:

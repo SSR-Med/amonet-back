@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from api.configurations import register_exception_handlers
 from api.controllers import marca_router, materia_prima_router, producto_router, usuario_router
+from api.crons import scheduler, setup_cron_jobs
 from infrastructure.dataaccess import init_db
 from infrastructure.services import get_settings
 
@@ -13,7 +14,10 @@ from infrastructure.services import get_settings
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
+    setup_cron_jobs()
+    scheduler.start()
     yield
+    scheduler.shutdown()
 
 
 def create_app() -> FastAPI:
