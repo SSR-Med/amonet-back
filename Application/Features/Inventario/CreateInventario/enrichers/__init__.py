@@ -1,0 +1,2 @@
+from .create_inventario_enricher import CreateInventarioEnricher
+from .object_storage_enricher import ObjectStorageEnricher

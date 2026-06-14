@@ -5,15 +5,16 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.configurations import register_exception_handlers
-from api.controllers import logs_router, marca_router, materia_prima_router, producto_router, usuario_router
+from api.controllers import inventario_router, logs_router, marca_router, materia_prima_router, producto_router, usuario_router
 from api.crons import scheduler, setup
 from infrastructure.dataaccess import init_db
-from infrastructure.services import get_settings
+from infrastructure.services import LogUploader, get_settings
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
+    LogUploader.upload_old_logs()
     setup()
     scheduler.start()
     yield
@@ -39,6 +40,7 @@ def create_app() -> FastAPI:
 
     register_exception_handlers(app)
 
+    app.include_router(inventario_router, prefix="/api/v1")
     app.include_router(logs_router, prefix="/api/v1")
     app.include_router(marca_router, prefix="/api/v1")
     app.include_router(materia_prima_router, prefix="/api/v1")

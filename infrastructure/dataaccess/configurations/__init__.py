@@ -10,6 +10,8 @@ from .producto_configuration import ProductoConfiguration
 from .producto_materia_prima_configuration import (
     ProductoMateriaPrimaConfiguration,
 )
+from .inventario_materia_prima_configuration import InventarioMateriaPrimaConfiguration
+from .inventario_materia_prima_contenedor_configuration import InventarioMateriaPrimaContenedorConfiguration
 from .variables_globales_materia_prima_configuration import (
     VariablesGlobalesMateriaPrimaConfiguration,
 )

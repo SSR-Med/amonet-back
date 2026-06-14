@@ -6,4 +6,6 @@ from .materia_prima import MateriaPrima
 from .producto import Producto
 from .producto_materia_prima import ProductoMateriaPrima
 from .amonet_usuario import Usuario
+from .inventario_materia_prima import InventarioMateriaPrima
+from .inventario_materia_prima_contenedor import InventarioMateriaPrimaContenedor
 from .variables_globales_materia_prima import VariablesGlobalesMateriaPrima
