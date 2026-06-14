@@ -1,0 +1,1 @@
+from .inventario_query_builder import InventarioQueryBuilder

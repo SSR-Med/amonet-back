@@ -35,6 +35,10 @@ class CreateInventarioCommandHandler:
         mp_ids = [item.amonet_materia_prima_id for item in command.items]
         await self._materia_prima_validator.validate_exist(mp_ids)
 
+        for item in command.items:
+            item.proveedor = item.proveedor.strip().upper()
+            item.lote = item.lote.strip().upper()
+
         enriched_items = await self._enricher.enrich(command.items, current_user)
 
         ruta_evidencia = ObjectStorageEnricher.enrich(

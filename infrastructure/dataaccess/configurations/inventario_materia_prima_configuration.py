@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 from uuid import uuid4
 
 from sqlalchemy import Boolean, DateTime, ForeignKey, String, Text, func
@@ -39,3 +39,11 @@ class InventarioMateriaPrimaConfiguration(Base):
     ruta_evidencia: Mapped[str] = mapped_column(Text, nullable=False)
 
     materia_prima = relationship("MateriaPrimaConfiguration")
+    usuario_alta_rel = relationship(
+        "UsuarioConfiguration",
+        primaryjoin="UsuarioConfiguration.id_amonet_usuario == foreign(InventarioMateriaPrimaConfiguration.usuario_alta)",
+        uselist=False,
+    )
+    contenedores: Mapped[List["InventarioMateriaPrimaContenedorConfiguration"]] = relationship(
+        back_populates="inventario"
+    )

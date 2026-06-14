@@ -1,4 +1,5 @@
-from typing import List
+from typing import Dict, List
+from uuid import UUID
 
 from sqlalchemy.orm import selectinload
 
@@ -29,6 +30,7 @@ class MateriaPrimaMapper:
     @staticmethod
     def to_response(
         model: MateriaPrimaConfiguration,
+        cantidad_disponible: float = 0,
     ) -> MateriaPrimaResponseDto:
         return MateriaPrimaResponseDto(
             id=model.id_amonet_materia_prima,
@@ -42,6 +44,7 @@ class MateriaPrimaMapper:
                 nombre=model.tipo_unidad.nombre,
                 abreviacion=model.tipo_unidad.abreviacion,
             ),
+            cantidad_disponible=cantidad_disponible,
         )
 
     @staticmethod
@@ -50,9 +53,17 @@ class MateriaPrimaMapper:
         page: int,
         total: int,
         page_size: int,
+        quantity_map: Dict[UUID, float] = None,
     ) -> PaginatedResult[MateriaPrimaResponseDto]:
+        if quantity_map is None:
+            quantity_map = {}
         return PaginatedResult(
-            items=[MateriaPrimaMapper.to_response(item) for item in items],
+            items=[
+                MateriaPrimaMapper.to_response(
+                    item, quantity_map.get(item.id_amonet_materia_prima, 0)
+                )
+                for item in items
+            ],
             current_page=page,
             total_items=total,
             page_size=page_size,

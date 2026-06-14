@@ -12,8 +12,10 @@ class MateriaPrimaResponseDto:
         nombre: str,
         tipo_materia_prima: CatalogoInfoDto,
         tipo_unidad: CatalogoInfoDto,
+        cantidad_disponible: float = 0,
     ) -> None:
         self.id = id
         self.nombre = nombre
         self.tipo_materia_prima = tipo_materia_prima
         self.tipo_unidad = tipo_unidad
+        self.cantidad_disponible = cantidad_disponible

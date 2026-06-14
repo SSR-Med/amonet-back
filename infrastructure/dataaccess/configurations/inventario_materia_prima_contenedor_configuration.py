@@ -24,4 +24,4 @@ class InventarioMateriaPrimaContenedorConfiguration(Base):
         nullable=False,
     )
 
-    inventario = relationship("InventarioMateriaPrimaConfiguration")
+    inventario = relationship("InventarioMateriaPrimaConfiguration", back_populates="contenedores")

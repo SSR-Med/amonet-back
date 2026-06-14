@@ -1,0 +1,71 @@
+from typing import List
+
+from sqlalchemy.orm import selectinload
+
+from Application.Features.Inventario.GetAllInventario.dtos import (
+    InventarioResponseDto,
+    UsuarioInfoDto,
+)
+from core.dtos import PaginatedResult
+from infrastructure.dataaccess.configurations import (
+    InventarioMateriaPrimaConfiguration,
+)
+
+
+class InventarioLoaderOptions:
+
+    @staticmethod
+    def get():
+        return [
+            selectinload(InventarioMateriaPrimaConfiguration.materia_prima),
+            selectinload(InventarioMateriaPrimaConfiguration.usuario_alta_rel),
+            selectinload(InventarioMateriaPrimaConfiguration.contenedores),
+        ]
+
+
+class InventarioMapper:
+
+    @staticmethod
+    def to_response(
+        model: InventarioMateriaPrimaConfiguration,
+    ) -> InventarioResponseDto:
+        materia_prima = model.materia_prima
+        usuario = model.usuario_alta_rel
+
+        cantidad_total = sum(
+            float(c.cantidad) for c in (model.contenedores or [])
+        )
+        numero_contenedores = len(model.contenedores or [])
+
+        return InventarioResponseDto(
+            id=model.id_amonet_inventario_materia_prima,
+            fecha_ingreso=model.fecha_ingreso,
+            numero_ingreso=model.numero_ingreso,
+            materia_prima_nombre=materia_prima.nombre if materia_prima else "",
+            proveedor=model.proveedor,
+            lote=model.lote,
+            fecha_vencimiento=model.fecha_vencimiento,
+            usuario_alta=UsuarioInfoDto(
+                id=usuario.id_amonet_usuario,
+                documento=usuario.documento,
+                nombre=usuario.nombre,
+            ) if usuario else None,
+            status=model.status,
+            ruta_evidencia=model.ruta_evidencia,
+            cantidad_total=cantidad_total,
+            numero_contenedores=numero_contenedores,
+        )
+
+    @staticmethod
+    def to_paginated_response(
+        items: List[InventarioMateriaPrimaConfiguration],
+        page: int,
+        total: int,
+        page_size: int,
+    ) -> PaginatedResult[InventarioResponseDto]:
+        return PaginatedResult(
+            items=[InventarioMapper.to_response(item) for item in items],
+            current_page=page,
+            total_items=total,
+            page_size=page_size,
+        )
