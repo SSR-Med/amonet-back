@@ -15,6 +15,7 @@ from Application.Features.Inventario.CreateInventario.validators import (
     MateriaPrimaValidator,
 )
 from core.dtos import AuditLogDto, CurrentUserDto
+from core.exceptions import BadRequestException
 from infrastructure.dataaccess.unit_of_work import UnitOfWork
 from infrastructure.services import AuditLogger
 
@@ -38,6 +39,9 @@ class CreateInventarioCommandHandler:
         for item in command.items:
             item.proveedor = item.proveedor.strip().upper()
             item.lote = item.lote.strip().upper()
+            for c in item.cantidades:
+                if c < 0:
+                    raise BadRequestException("Cantidades must be >= 0")
 
         enriched_items = await self._enricher.enrich(command.items, current_user)
 

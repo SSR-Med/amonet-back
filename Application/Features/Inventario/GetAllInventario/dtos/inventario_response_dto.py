@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 from uuid import UUID
 
 
@@ -10,6 +10,12 @@ class UsuarioInfoDto:
         self.nombre = nombre
 
 
+class ContenedorDto:
+    def __init__(self, contador: int, cantidad: float) -> None:
+        self.contador = contador
+        self.cantidad = cantidad
+
+
 class InventarioResponseDto:
     def __init__(
         self,
@@ -17,6 +23,7 @@ class InventarioResponseDto:
         fecha_ingreso: datetime,
         numero_ingreso: str,
         materia_prima_nombre: str,
+        unidad_abreviacion: str,
         proveedor: str,
         lote: str,
         fecha_vencimiento: datetime,
@@ -25,11 +32,13 @@ class InventarioResponseDto:
         ruta_evidencia: str,
         cantidad_total: float,
         numero_contenedores: int,
+        contenedores: List[ContenedorDto],
     ) -> None:
         self.id = id
         self.fecha_ingreso = fecha_ingreso
         self.numero_ingreso = numero_ingreso
         self.materia_prima_nombre = materia_prima_nombre
+        self.unidad_abreviacion = unidad_abreviacion
         self.proveedor = proveedor
         self.lote = lote
         self.fecha_vencimiento = fecha_vencimiento
@@ -38,3 +47,4 @@ class InventarioResponseDto:
         self.ruta_evidencia = ruta_evidencia
         self.cantidad_total = cantidad_total
         self.numero_contenedores = numero_contenedores
+        self.contenedores = contenedores

@@ -1,1 +1,5 @@
-from .inventario_response_dto import InventarioResponseDto, UsuarioInfoDto
+from .inventario_response_dto import (
+    ContenedorDto,
+    InventarioResponseDto,
+    UsuarioInfoDto,
+)

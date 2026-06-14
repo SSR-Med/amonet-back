@@ -3,12 +3,14 @@ from typing import List
 from sqlalchemy.orm import selectinload
 
 from Application.Features.Inventario.GetAllInventario.dtos import (
+    ContenedorDto,
     InventarioResponseDto,
     UsuarioInfoDto,
 )
 from core.dtos import PaginatedResult
 from infrastructure.dataaccess.configurations import (
     InventarioMateriaPrimaConfiguration,
+    MateriaPrimaConfiguration,
 )
 
 
@@ -17,7 +19,9 @@ class InventarioLoaderOptions:
     @staticmethod
     def get():
         return [
-            selectinload(InventarioMateriaPrimaConfiguration.materia_prima),
+            selectinload(InventarioMateriaPrimaConfiguration.materia_prima).selectinload(
+                MateriaPrimaConfiguration.tipo_unidad
+            ),
             selectinload(InventarioMateriaPrimaConfiguration.usuario_alta_rel),
             selectinload(InventarioMateriaPrimaConfiguration.contenedores),
         ]
@@ -37,11 +41,19 @@ class InventarioMapper:
         )
         numero_contenedores = len(model.contenedores or [])
 
+        contenedores = [
+            ContenedorDto(contador=c.contador_materia_prima, cantidad=float(c.cantidad))
+            for c in (model.contenedores or [])
+        ]
+
+        unidad = materia_prima.tipo_unidad if materia_prima and materia_prima.tipo_unidad else None
+
         return InventarioResponseDto(
             id=model.id_amonet_inventario_materia_prima,
             fecha_ingreso=model.fecha_ingreso,
             numero_ingreso=model.numero_ingreso,
             materia_prima_nombre=materia_prima.nombre if materia_prima else "",
+            unidad_abreviacion=unidad.abreviacion if unidad else "",
             proveedor=model.proveedor,
             lote=model.lote,
             fecha_vencimiento=model.fecha_vencimiento,
@@ -54,6 +66,7 @@ class InventarioMapper:
             ruta_evidencia=model.ruta_evidencia,
             cantidad_total=cantidad_total,
             numero_contenedores=numero_contenedores,
+            contenedores=contenedores,
         )
 
     @staticmethod
