@@ -11,9 +11,11 @@ class UsuarioInfoDto:
 
 
 class ContenedorDto:
-    def __init__(self, contador: int, cantidad: float) -> None:
+    def __init__(self, contador: int, cantidad: float, precio: int, precio_unidad: float) -> None:
         self.contador = contador
         self.cantidad = cantidad
+        self.precio = precio
+        self.precio_unidad = precio_unidad
 
 
 class InventarioResponseDto:

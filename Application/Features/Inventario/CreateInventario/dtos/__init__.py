@@ -1,2 +1,2 @@
-from .create_inventario_item_dto import CreateInventarioItemDto
+from .create_inventario_item_dto import ContenedorInputDto, CreateInventarioItemDto
 from .enriched_item import EnrichedItem

@@ -39,9 +39,9 @@ class CreateInventarioCommandHandler:
         for item in command.items:
             item.proveedor = item.proveedor.strip().upper()
             item.lote = item.lote.strip().upper()
-            for c in item.cantidades:
-                if c < 0:
-                    raise BadRequestException("Cantidades must be >= 0")
+            for c in item.contenedores:
+                if c.cantidad < 0 or c.precio < 0:
+                    raise BadRequestException("Cantidad and precio must be >= 0")
 
         enriched_items = await self._enricher.enrich(command.items, current_user)
 

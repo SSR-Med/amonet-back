@@ -42,7 +42,12 @@ class InventarioMapper:
         numero_contenedores = len(model.contenedores or [])
 
         contenedores = [
-            ContenedorDto(contador=c.contador_materia_prima, cantidad=float(c.cantidad))
+            ContenedorDto(
+                contador=c.contador_materia_prima,
+                cantidad=float(c.cantidad),
+                precio=c.precio,
+                precio_unidad=round(c.precio / float(c.cantidad), 2) if c.cantidad > 0 else 0,
+            )
             for c in (model.contenedores or [])
         ]
 

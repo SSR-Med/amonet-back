@@ -31,11 +31,12 @@ class CreateInventarioMapper:
         inventario_id: UUID, enriched: EnrichedItem
     ) -> List[InventarioMateriaPrimaContenedorConfiguration]:
         models = []
-        for i, cantidad in enumerate(enriched.dto.cantidades, start=1):
+        for i, c in enumerate(enriched.dto.contenedores, start=1):
             models.append(
                 InventarioMateriaPrimaContenedorConfiguration(
                     contador_materia_prima=i,
-                    cantidad=float(cantidad),
+                    cantidad=float(c.cantidad),
+                    precio=c.precio,
                     amonet_inventario_materia_prima_id=inventario_id,
                 )
             )
