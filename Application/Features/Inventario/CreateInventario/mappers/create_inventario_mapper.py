@@ -36,6 +36,7 @@ class CreateInventarioMapper:
                 InventarioMateriaPrimaContenedorConfiguration(
                     contador_materia_prima=i,
                     cantidad=float(c.cantidad),
+                    cantidad_disponible=float(c.cantidad),
                     precio=c.precio,
                     amonet_inventario_materia_prima_id=inventario_id,
                 )

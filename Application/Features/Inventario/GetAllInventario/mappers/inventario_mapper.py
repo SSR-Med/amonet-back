@@ -45,6 +45,7 @@ class InventarioMapper:
             ContenedorDto(
                 contador=c.contador_materia_prima,
                 cantidad=float(c.cantidad),
+                cantidad_disponible=float(c.cantidad_disponible),
                 precio=c.precio,
                 precio_unidad=round(c.precio / float(c.cantidad), 2) if c.cantidad > 0 else 0,
             )

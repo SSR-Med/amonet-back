@@ -15,6 +15,7 @@ class InventarioMateriaPrimaContenedorConfiguration(Base):
     )
     contador_materia_prima: Mapped[int] = mapped_column(Integer, nullable=False)
     cantidad: Mapped[float] = mapped_column(Numeric(18, 2), nullable=False)
+    cantidad_disponible: Mapped[float] = mapped_column(Numeric(18, 2), nullable=False)
     precio: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     amonet_inventario_materia_prima_id: Mapped[UUID] = mapped_column(
         UUID(as_uuid=True),
