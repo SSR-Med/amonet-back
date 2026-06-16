@@ -18,7 +18,9 @@ class IRepository(ABC, Generic[T]):
         pass
 
     @abstractmethod
-    async def first_or_default(self, where: Callable) -> Optional[T]:
+    async def first_or_default(
+        self, where: Callable, loader_options: Optional[List[Any]] = None
+    ) -> Optional[T]:
         pass
 
     @abstractmethod

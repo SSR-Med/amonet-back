@@ -25,6 +25,7 @@ class InventarioResponseDto:
         id: UUID,
         fecha_ingreso: datetime,
         numero_ingreso: str,
+        amonet_materia_prima_id: UUID,
         materia_prima_nombre: str,
         unidad_abreviacion: str,
         proveedor: str,
@@ -43,6 +44,7 @@ class InventarioResponseDto:
         self.id = id
         self.fecha_ingreso = fecha_ingreso
         self.numero_ingreso = numero_ingreso
+        self.amonet_materia_prima_id = amonet_materia_prima_id
         self.materia_prima_nombre = materia_prima_nombre
         self.unidad_abreviacion = unidad_abreviacion
         self.proveedor = proveedor

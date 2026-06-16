@@ -6,9 +6,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from api.dependencies import get_current_user, require_roles
 from core.constants import ADMIN
 from core.dtos import CurrentUserDto
+from Application.Features.MateriaPrima.GetMateriaPrimaById.query import (
+    GetMateriaPrimaByIdQuery,
+    GetMateriaPrimaByIdQueryHandler,
+)
 from Application.Features.MateriaPrima.CreateMateriaPrima.command import (
     CreateMateriaPrimaCommand,
     CreateMateriaPrimaCommandHandler,
+)
+from Application.Features.MateriaPrima.GetVariableGlobalById.query import (
+    GetVariableGlobalByIdQuery,
+    GetVariableGlobalByIdQueryHandler,
 )
 from Application.Features.MateriaPrima.CreateVariablesGlobales.command import (
     CreateVariablesGlobalesCommand,
@@ -120,6 +128,16 @@ async def get_all(
     return await handler.handle(query)
 
 
+@router.get("/variables_globales/{id}")
+async def get_variable_global_by_id(
+    id: UUID,
+    session: AsyncSession = Depends(get_async_session),
+    current_user: CurrentUserDto = Depends(get_current_user),
+):
+    handler = GetVariableGlobalByIdQueryHandler(session)
+    return await handler.handle(GetVariableGlobalByIdQuery(id=id))
+
+
 @router.post("/variables_globales", status_code=201)
 async def create(
     command: CreateVariablesGlobalesCommand,
@@ -139,6 +157,16 @@ async def update(
 ):
     handler = UpdateVariablesGlobalesCommandHandler(session)
     return await handler.handle(id, command, current_user)
+
+
+@router.get("/{id}")
+async def get_materia_prima_by_id(
+    id: UUID,
+    session: AsyncSession = Depends(get_async_session),
+    current_user: CurrentUserDto = Depends(get_current_user),
+):
+    handler = GetMateriaPrimaByIdQueryHandler(session)
+    return await handler.handle(GetMateriaPrimaByIdQuery(id=id))
 
 
 @router.delete("/variables_globales/{id}", status_code=204)

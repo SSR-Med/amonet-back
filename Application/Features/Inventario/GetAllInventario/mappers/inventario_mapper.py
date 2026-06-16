@@ -60,6 +60,7 @@ class InventarioMapper:
             id=model.id_amonet_inventario_materia_prima,
             fecha_ingreso=model.fecha_ingreso,
             numero_ingreso=model.numero_ingreso,
+            amonet_materia_prima_id=model.amonet_materia_prima_id,
             materia_prima_nombre=materia_prima.nombre if materia_prima else "",
             unidad_abreviacion=unidad.abreviacion if unidad else "",
             proveedor=model.proveedor,

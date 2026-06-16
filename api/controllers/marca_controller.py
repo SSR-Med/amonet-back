@@ -6,6 +6,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from api.dependencies import get_current_user, require_roles
 from core.constants import ADMIN
 from core.dtos import CurrentUserDto
+from Application.Features.Marca.GetMarcaById.query import (
+    GetMarcaByIdQuery,
+    GetMarcaByIdQueryHandler,
+)
 from Application.Features.Marca.CreateMarca.command import (
     CreateMarcaCommand,
     CreateMarcaCommandHandler,
@@ -35,6 +39,16 @@ async def get_all(
 ):
     handler = GetAllMarcasQueryHandler(session)
     return await handler.handle(query)
+
+
+@router.get("/{id}")
+async def get_by_id(
+    id: UUID,
+    session: AsyncSession = Depends(get_async_session),
+    current_user: CurrentUserDto = Depends(get_current_user),
+):
+    handler = GetMarcaByIdQueryHandler(session)
+    return await handler.handle(GetMarcaByIdQuery(id=id))
 
 
 @router.post("/", status_code=201)

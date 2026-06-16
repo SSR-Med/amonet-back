@@ -16,6 +16,10 @@ from Application.Features.Inventario.UpdateInventario.command import (
     UpdateInventarioCommand,
     UpdateInventarioCommandHandler,
 )
+from Application.Features.Inventario.GetInventarioById.query import (
+    GetInventarioByIdQuery,
+    GetInventarioByIdQueryHandler,
+)
 from Application.Features.Inventario.DownloadEvidencia.query import (
     DownloadEvidenciaQuery,
     DownloadEvidenciaQueryHandler,
@@ -30,6 +34,16 @@ from infrastructure.dataaccess import get_async_session
 router = APIRouter(prefix="/inventario", tags=["Inventario"])
 
 
+@router.get("/evidencia")
+async def download_evidencia(
+    numero_ingreso: str,
+    session: AsyncSession = Depends(get_async_session),
+    current_user: CurrentUserDto = Depends(get_current_user),
+):
+    handler = DownloadEvidenciaQueryHandler(session)
+    return await handler.handle(DownloadEvidenciaQuery(numero_ingreso=numero_ingreso))
+
+
 @router.get("/")
 async def get_all_inventario(
     query: GetAllInventarioQuery = Query(),
@@ -40,14 +54,14 @@ async def get_all_inventario(
     return await handler.handle(query)
 
 
-@router.get("/evidencia")
-async def download_evidencia(
-    numero_ingreso: str,
+@router.get("/{id}")
+async def get_inventario_by_id(
+    id: UUID,
     session: AsyncSession = Depends(get_async_session),
     current_user: CurrentUserDto = Depends(get_current_user),
 ):
-    handler = DownloadEvidenciaQueryHandler(session)
-    return await handler.handle(DownloadEvidenciaQuery(numero_ingreso=numero_ingreso))
+    handler = GetInventarioByIdQueryHandler(session)
+    return await handler.handle(GetInventarioByIdQuery(id=id))
 
 
 @router.patch("/{id}")

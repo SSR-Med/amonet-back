@@ -46,10 +46,14 @@ class Repository(IRepository, Generic[T]):
 
         return items, page, total_items, page_size
 
-    async def first_or_default(self, where: Callable) -> Optional[T]:
+    async def first_or_default(
+        self, where: Callable, loader_options: Optional[List[Any]] = None
+    ) -> Optional[T]:
         query = select(self._model)
         if where:
             query = where(query)
+        if loader_options:
+            query = query.options(*loader_options)
         query = query.limit(1)
         result = await self._session.execute(query)
         return result.scalar_one_or_none()
