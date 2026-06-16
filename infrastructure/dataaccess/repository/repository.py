@@ -20,6 +20,7 @@ class Repository(IRepository, Generic[T]):
         page_size: int = 20,
         where: Optional[Callable] = None,
         loader_options: Optional[List[Any]] = None,
+        order_by: Optional[Any] = None,
     ) -> Tuple[List[T], int, int, int]:
         query = select(self._model)
         count_query = select(func.count()).select_from(self._model)
@@ -30,6 +31,9 @@ class Repository(IRepository, Generic[T]):
 
         if loader_options:
             query = query.options(*loader_options)
+
+        if order_by is not None:
+            query = query.order_by(order_by)
 
         total_result = await self._session.execute(count_query)
         total_items = total_result.scalar_one()

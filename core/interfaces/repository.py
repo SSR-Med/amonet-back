@@ -13,6 +13,7 @@ class IRepository(ABC, Generic[T]):
         page_size: int = 20,
         where: Optional[Callable] = None,
         loader_options: Optional[List[Any]] = None,
+        order_by: Optional[Any] = None,
     ) -> Tuple[List[T], int, int, int]:
         pass
 

@@ -33,6 +33,7 @@ class GetAllInventarioQueryHandler:
             page_size=query.page_size,
             where=InventarioQueryBuilder(query).build(),
             loader_options=InventarioLoaderOptions.get(),
+            order_by=InventarioMateriaPrimaConfiguration.fecha_ingreso.desc(),
         )
 
         return InventarioMapper.to_paginated_response(items, page, total, page_size)
