@@ -32,6 +32,9 @@ class InventarioResponseDto:
         fecha_vencimiento: datetime,
         usuario_alta: UsuarioInfoDto,
         status: Optional[bool],
+        observacion_rechazo: Optional[str],
+        fecha_modifica: Optional[datetime],
+        usuario_modifica: Optional[UsuarioInfoDto],
         ruta_evidencia: str,
         cantidad_total: float,
         numero_contenedores: int,
@@ -47,6 +50,9 @@ class InventarioResponseDto:
         self.fecha_vencimiento = fecha_vencimiento
         self.usuario_alta = usuario_alta
         self.status = status
+        self.observacion_rechazo = observacion_rechazo
+        self.fecha_modifica = fecha_modifica
+        self.usuario_modifica = usuario_modifica
         self.ruta_evidencia = ruta_evidencia
         self.cantidad_total = cantidad_total
         self.numero_contenedores = numero_contenedores

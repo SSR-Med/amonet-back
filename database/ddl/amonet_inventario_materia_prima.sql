@@ -11,7 +11,9 @@ CREATE TABLE amonet_inventario_materia_prima (
     usuario_alta UUID NOT NULL,
     status BOOLEAN,
     usuario_modifica UUID,
+    fecha_modifica TIMESTAMPTZ,
     ruta_evidencia TEXT NOT NULL,
+    observacion_rechazo TEXT,
     CONSTRAINT fk_inventario_materia_prima
         FOREIGN KEY (amonet_materia_prima_id)
         REFERENCES amonet_materia_prima(id_amonet_materia_prima)

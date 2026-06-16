@@ -23,6 +23,7 @@ class InventarioLoaderOptions:
                 MateriaPrimaConfiguration.tipo_unidad
             ),
             selectinload(InventarioMateriaPrimaConfiguration.usuario_alta_rel),
+            selectinload(InventarioMateriaPrimaConfiguration.usuario_modifica_rel),
             selectinload(InventarioMateriaPrimaConfiguration.contenedores),
         ]
 
@@ -34,7 +35,8 @@ class InventarioMapper:
         model: InventarioMateriaPrimaConfiguration,
     ) -> InventarioResponseDto:
         materia_prima = model.materia_prima
-        usuario = model.usuario_alta_rel
+        usuario_alta = model.usuario_alta_rel
+        usuario_modifica = model.usuario_modifica_rel
 
         cantidad_total = sum(
             float(c.cantidad) for c in (model.contenedores or [])
@@ -64,11 +66,18 @@ class InventarioMapper:
             lote=model.lote,
             fecha_vencimiento=model.fecha_vencimiento,
             usuario_alta=UsuarioInfoDto(
-                id=usuario.id_amonet_usuario,
-                documento=usuario.documento,
-                nombre=usuario.nombre,
-            ) if usuario else None,
+                id=usuario_alta.id_amonet_usuario,
+                documento=usuario_alta.documento,
+                nombre=usuario_alta.nombre,
+            ) if usuario_alta else None,
             status=model.status,
+            observacion_rechazo=model.observacion_rechazo,
+            fecha_modifica=model.fecha_modifica,
+            usuario_modifica=UsuarioInfoDto(
+                id=usuario_modifica.id_amonet_usuario,
+                documento=usuario_modifica.documento,
+                nombre=usuario_modifica.nombre,
+            ) if usuario_modifica else None,
             ruta_evidencia=model.ruta_evidencia,
             cantidad_total=cantidad_total,
             numero_contenedores=numero_contenedores,

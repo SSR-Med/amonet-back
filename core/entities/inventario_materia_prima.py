@@ -16,4 +16,6 @@ class InventarioMateriaPrima:
     usuario_alta: UUID = field(default_factory=uuid4)
     status: Optional[bool] = None
     usuario_modifica: Optional[UUID] = None
+    fecha_modifica: Optional[datetime] = None
     ruta_evidencia: str = ""
+    observacion_rechazo: Optional[str] = None

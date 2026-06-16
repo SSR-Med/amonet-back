@@ -1,0 +1,1 @@
+from .update_inventario_mapper import UpdateInventarioMapper

@@ -36,12 +36,21 @@ class InventarioMateriaPrimaConfiguration(Base):
     usuario_modifica: Mapped[Optional[UUID]] = mapped_column(
         UUID(as_uuid=True), nullable=True
     )
+    fecha_modifica: Mapped[Optional[datetime]] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
     ruta_evidencia: Mapped[str] = mapped_column(Text, nullable=False)
+    observacion_rechazo: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
     materia_prima = relationship("MateriaPrimaConfiguration")
     usuario_alta_rel = relationship(
         "UsuarioConfiguration",
         primaryjoin="UsuarioConfiguration.id_amonet_usuario == foreign(InventarioMateriaPrimaConfiguration.usuario_alta)",
+        uselist=False,
+    )
+    usuario_modifica_rel = relationship(
+        "UsuarioConfiguration",
+        primaryjoin="UsuarioConfiguration.id_amonet_usuario == foreign(InventarioMateriaPrimaConfiguration.usuario_modifica)",
         uselist=False,
     )
     contenedores: Mapped[List["InventarioMateriaPrimaContenedorConfiguration"]] = relationship(

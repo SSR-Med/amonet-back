@@ -53,6 +53,9 @@ class ObjectStorageService:
                 )
         return items
 
+    def delete(self, key: str) -> None:
+        self._client.delete_object(Bucket=self._bucket, Key=key)
+
     def get_download_url(self, dto: ObjectStorageDownloadDto) -> str:
         return self._client.generate_presigned_url(
             "get_object",

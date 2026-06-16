@@ -1,0 +1,2 @@
+from .update_inventario_command import UpdateInventarioCommand
+from .update_inventario_command_handler import UpdateInventarioCommandHandler
