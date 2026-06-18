@@ -1,3 +1,4 @@
+from .catalogo_estado_produccion import CatalogoEstadoProduccion
 from .catalogo_tipo_materia_prima import CatalogoTipoMateriaPrima
 from .catalogo_tipo_unidad import CatalogoTipoUnidad
 from .catalogo_usuario_rol import CatalogoUsuarioRol
@@ -8,4 +9,10 @@ from .producto_materia_prima import ProductoMateriaPrima
 from .amonet_usuario import Usuario
 from .inventario_materia_prima import InventarioMateriaPrima
 from .inventario_materia_prima_contenedor import InventarioMateriaPrimaContenedor
+from .orden_produccion import OrdenProduccion
+from .orden_produccion_materia_prima import OrdenProduccionMateriaPrima
+from .orden_produccion_materia_prima_contenedor import (
+    OrdenProduccionMateriaPrimaContenedor,
+)
+from .orden_produccion_variable_global import OrdenProduccionVariableGlobal
 from .variables_globales_materia_prima import VariablesGlobalesMateriaPrima

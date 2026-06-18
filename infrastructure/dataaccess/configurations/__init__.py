@@ -1,4 +1,7 @@
 from .amonet_usuario_configuration import UsuarioConfiguration
+from .catalogo_estado_produccion_configuration import (
+    CatalogoEstadoProduccionConfiguration,
+)
 from .catalogo_tipo_materia_prima_configuration import (
     CatalogoTipoMateriaPrimaConfiguration,
 )
@@ -12,6 +15,16 @@ from .producto_materia_prima_configuration import (
 )
 from .inventario_materia_prima_configuration import InventarioMateriaPrimaConfiguration
 from .inventario_materia_prima_contenedor_configuration import InventarioMateriaPrimaContenedorConfiguration
+from .orden_produccion_configuration import OrdenProduccionConfiguration
+from .orden_produccion_materia_prima_configuration import (
+    OrdenProduccionMateriaPrimaConfiguration,
+)
+from .orden_produccion_materia_prima_contenedor_configuration import (
+    OrdenProduccionMateriaPrimaContenedorConfiguration,
+)
+from .orden_produccion_variable_global_configuration import (
+    OrdenProduccionVariableGlobalConfiguration,
+)
 from .variables_globales_materia_prima_configuration import (
     VariablesGlobalesMateriaPrimaConfiguration,
 )
