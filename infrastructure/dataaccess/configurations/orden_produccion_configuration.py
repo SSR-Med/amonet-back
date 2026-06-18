@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 from uuid import uuid4
 
-from sqlalchemy import DateTime, ForeignKey, Text, func
+from sqlalchemy import CheckConstraint, DateTime, ForeignKey, Numeric, Text, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -11,6 +11,9 @@ from infrastructure.dataaccess.base import Base
 
 class OrdenProduccionConfiguration(Base):
     __tablename__ = "amonet_orden_produccion"
+    __table_args__ = (
+        CheckConstraint("coste >= 0", name="ck_orden_produccion_coste"),
+    )
 
     id_amonet_orden_produccion: Mapped[UUID] = mapped_column(
         UUID(as_uuid=True), primary_key=True, default=uuid4
@@ -41,6 +44,7 @@ class OrdenProduccionConfiguration(Base):
         ),
         nullable=False,
     )
+    coste: Mapped[float] = mapped_column(Numeric(18, 2), nullable=False, default=0)
 
     producto = relationship("ProductoConfiguration")
     estado_produccion = relationship("CatalogoEstadoProduccionConfiguration")

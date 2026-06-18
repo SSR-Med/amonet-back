@@ -14,3 +14,4 @@ class OrdenProduccion:
     fecha_modifica: Optional[datetime] = None
     usuario_modifica: Optional[UUID] = None
     amonet_estado_produccion_id: UUID = field(default_factory=uuid4)
+    coste: float = 0.0

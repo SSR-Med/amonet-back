@@ -9,6 +9,7 @@ CREATE TABLE amonet_orden_produccion (
     fecha_modifica TIMESTAMPTZ,
     usuario_modifica UUID,
     amonet_estado_produccion_id UUID NOT NULL,
+    coste NUMERIC(18,2) NOT NULL DEFAULT 0,
     CONSTRAINT fk_orden_produccion_producto
         FOREIGN KEY (amonet_producto_id)
         REFERENCES amonet_producto(id_amonet_producto)
@@ -16,5 +17,6 @@ CREATE TABLE amonet_orden_produccion (
     CONSTRAINT fk_orden_produccion_estado
         FOREIGN KEY (amonet_estado_produccion_id)
         REFERENCES cat_amonet_estado_produccion(id_cat_amonet_estado_produccion)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT ck_orden_produccion_coste CHECK (coste >= 0)
 );
