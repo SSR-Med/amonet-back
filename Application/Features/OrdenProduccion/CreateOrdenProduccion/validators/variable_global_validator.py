@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from Application.Features.OrdenProduccion.CreateOrdenProduccion.dtos import (
     VariableGlobalDto,
 )
-from core.exceptions import NotFoundException
+from core.exceptions import BadRequestException, NotFoundException
 from infrastructure.dataaccess.configurations import (
     VariablesGlobalesMateriaPrimaConfiguration,
 )
@@ -22,6 +22,11 @@ class VariableGlobalValidator:
             return
 
         for vg in variables_globales:
+            if vg.cantidad <= 0:
+                raise BadRequestException(
+                    f"Variable global '{vg.amonet_variable_materia_prima_id}' must have a positive quantity"
+                )
+
             existing = await self._repository.first_or_default(
                 lambda q: q.where(
                     VariablesGlobalesMateriaPrimaConfiguration.id_amonet_variable_materia_prima

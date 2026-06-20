@@ -23,6 +23,17 @@ class MateriaPrimaValidator:
         observaciones: Optional[str] = None,
     ) -> None:
         for mp in materias_primas:
+            if mp.cantidad <= 0:
+                raise BadRequestException(
+                    f"Materia prima '{mp.amonet_materia_prima_id}' must have a positive quantity"
+                )
+
+            for cont in mp.contenedores:
+                if cont.cantidad <= 0:
+                    raise BadRequestException(
+                        f"Container '{cont.amonet_inventario_materia_prima_contenedor_id}' "
+                        f"must have a positive quantity"
+                    )
             existing = await self._repository.first_or_default(
                 lambda q: q.where(
                     MateriaPrimaConfiguration.id_amonet_materia_prima
