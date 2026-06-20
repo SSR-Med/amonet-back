@@ -3,12 +3,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from Application.Features.OrdenProduccion.CreateOrdenProduccion.command import (
     CreateOrdenProduccionCommand,
 )
-from Application.Features.OrdenProduccion.CreateOrdenProduccion.validators import (
-    ContenedorValidator,
-    MateriaPrimaValidator,
-    ProductValidator,
-    VariableGlobalValidator,
-)
+from .contenedor_validator import ContenedorValidator
+from .materia_prima_validator import MateriaPrimaValidator
+from .product_validator import ProductValidator
+from .variable_global_validator import VariableGlobalValidator
 
 
 class CreateOrdenProduccionValidator:

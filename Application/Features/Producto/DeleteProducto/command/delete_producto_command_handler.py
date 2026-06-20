@@ -28,11 +28,8 @@ class DeleteProductoCommandHandler:
         if model is None:
             raise NotFoundException("Producto", str(command.id))
 
-        await self._repository.delete(
-            lambda q: q.where(
-                ProductoConfiguration.id_amonet_producto == command.id
-            )
-        )
+        model.status = False
+        await self._repository.update(model)
         await self._unit_of_work.commit()
 
         AuditLogger.log(AuditLogDto(

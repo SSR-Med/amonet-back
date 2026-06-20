@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from typing import Dict
 from uuid import UUID
 
@@ -53,11 +54,12 @@ class GetAllMateriaPrimaQueryHandler:
         if not mp_ids:
             return {}
 
+        one_year_ago = datetime.utcnow() - timedelta(days=365)
         stmt = (
             select(
                 InventarioMateriaPrimaConfiguration.amonet_materia_prima_id,
                 func.coalesce(
-                    func.sum(InventarioMateriaPrimaContenedorConfiguration.cantidad), 0
+                    func.sum(InventarioMateriaPrimaContenedorConfiguration.cantidad_disponible), 0
                 ).label("total"),
             )
             .outerjoin(
@@ -68,6 +70,7 @@ class GetAllMateriaPrimaQueryHandler:
             .where(
                 InventarioMateriaPrimaConfiguration.amonet_materia_prima_id.in_(mp_ids),
                 InventarioMateriaPrimaConfiguration.status == sa_true(),
+                InventarioMateriaPrimaConfiguration.fecha_ingreso >= one_year_ago,
             )
             .group_by(
                 InventarioMateriaPrimaConfiguration.amonet_materia_prima_id

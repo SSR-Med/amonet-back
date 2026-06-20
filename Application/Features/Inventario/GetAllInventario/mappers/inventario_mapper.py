@@ -45,6 +45,7 @@ class InventarioMapper:
 
         contenedores = [
             ContenedorDto(
+                id=c.id_amonet_inventario_materia_prima_contenedor,
                 contador=c.contador_materia_prima,
                 cantidad=float(c.cantidad),
                 cantidad_disponible=float(c.cantidad_disponible),

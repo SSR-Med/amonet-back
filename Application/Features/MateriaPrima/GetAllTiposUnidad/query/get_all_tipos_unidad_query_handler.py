@@ -25,5 +25,11 @@ class GetAllTiposUnidadQueryHandler:
     async def handle(
         self, query: GetAllTiposUnidadQuery
     ) -> List[TipoUnidadResponseDto]:
-        items, _, _, _ = await self._repository.get_all(page=1, page_size=100)
+        items, _, _, _ = await self._repository.get_all(
+            page=1,
+            page_size=100,
+            where=lambda q: q.where(
+                CatalogoTipoUnidadConfiguration.status == True
+            ),
+        )
         return TipoUnidadMapper.to_list(items)

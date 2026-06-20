@@ -7,3 +7,4 @@ class CatalogoTipoUnidad:
     id: UUID = field(default_factory=uuid4)
     nombre: str = ""
     abreviacion: str = ""
+    status: bool = True

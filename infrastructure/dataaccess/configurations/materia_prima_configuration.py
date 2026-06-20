@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from sqlalchemy import ForeignKey, String
+from sqlalchemy import Boolean, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -14,6 +14,7 @@ class MateriaPrimaConfiguration(Base):
         UUID(as_uuid=True), primary_key=True, default=uuid4
     )
     nombre: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
+    status: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     id_cat_amonet_tipo_materia_prima: Mapped[UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey(

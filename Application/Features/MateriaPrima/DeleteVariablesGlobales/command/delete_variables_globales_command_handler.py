@@ -31,12 +31,8 @@ class DeleteVariablesGlobalesCommandHandler:
         if model is None:
             raise NotFoundException("VariablesGlobalesMateriaPrima", str(command.id))
 
-        await self._repository.delete(
-            lambda q: q.where(
-                VariablesGlobalesMateriaPrimaConfiguration.id_amonet_variable_materia_prima
-                == command.id
-            )
-        )
+        model.status = False
+        await self._repository.update(model)
         await self._unit_of_work.commit()
 
         AuditLogger.log(AuditLogDto(

@@ -18,6 +18,7 @@ class ProductoQueryBuilder:
     def build(self) -> Callable:
         return (
             QueryBuilder()
+            .and_filter(ProductoConfiguration.status == True)
             .and_if_not_empty(
                 self._dto.codigo,
                 lambda: func.upper(

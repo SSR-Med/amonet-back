@@ -24,9 +24,8 @@ class DeleteMarcaCommandHandler:
         if model is None:
             raise NotFoundException("Marca", str(command.id))
 
-        await self._repository.delete(
-            lambda q: q.where(MarcaConfiguration.id_amonet_marca == command.id)
-        )
+        model.status = False
+        await self._repository.update(model)
         await self._unit_of_work.commit()
 
         AuditLogger.log(AuditLogDto(

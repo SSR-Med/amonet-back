@@ -10,3 +10,5 @@ CREATE TABLE amonet_producto (
         REFERENCES amonet_marca(id_amonet_marca)
         ON DELETE CASCADE
 );
+
+ALTER TABLE amonet_producto ADD COLUMN status BOOLEAN NOT NULL DEFAULT TRUE;

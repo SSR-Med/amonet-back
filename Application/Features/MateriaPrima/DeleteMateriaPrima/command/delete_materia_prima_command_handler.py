@@ -28,11 +28,8 @@ class DeleteMateriaPrimaCommandHandler:
         if model is None:
             raise NotFoundException("MateriaPrima", str(command.id))
 
-        await self._repository.delete(
-            lambda q: q.where(
-                MateriaPrimaConfiguration.id_amonet_materia_prima == command.id
-            )
-        )
+        model.status = False
+        await self._repository.update(model)
         await self._unit_of_work.commit()
 
         AuditLogger.log(AuditLogDto(

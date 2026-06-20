@@ -18,9 +18,9 @@ class GetAllRolesQueryHandler:
 
     async def handle(self, query: GetAllRolesQuery) -> List[RolResponseDto]:
         result = await self._session.execute(
-            select(CatalogoUsuarioRolConfiguration).order_by(
-                CatalogoUsuarioRolConfiguration.nombre
-            )
+            select(CatalogoUsuarioRolConfiguration)
+            .where(CatalogoUsuarioRolConfiguration.status == True)
+            .order_by(CatalogoUsuarioRolConfiguration.nombre)
         )
         roles = result.scalars().all()
         return RolMapper.to_list_response(roles)

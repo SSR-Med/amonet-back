@@ -8,3 +8,4 @@ class Producto:
     codigo: str = ""
     nombre: str = ""
     id_amonet_marca: UUID = field(default_factory=uuid4)
+    status: bool = True

@@ -8,3 +8,4 @@ class MateriaPrima:
     nombre: str = ""
     id_cat_amonet_tipo_materia_prima: UUID = field(default_factory=uuid4)
     id_cat_amonet_tipo_unidad: UUID = field(default_factory=uuid4)
+    status: bool = True

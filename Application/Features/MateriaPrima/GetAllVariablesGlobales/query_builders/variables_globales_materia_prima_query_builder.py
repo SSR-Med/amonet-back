@@ -20,6 +20,7 @@ class VariablesGlobalesMateriaPrimaQueryBuilder:
     def build(self) -> Callable:
         return (
             QueryBuilder()
+            .and_filter(VariablesGlobalesMateriaPrimaConfiguration.status == True)
             .and_if_not_empty(
                 self._dto.nombre,
                 lambda: func.upper(

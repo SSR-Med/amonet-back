@@ -14,3 +14,5 @@ CREATE TABLE amonet_materia_prima (
         REFERENCES cat_amonet_tipo_unidad(id_cat_amonet_tipo_unidad)
         ON DELETE CASCADE
 );
+
+ALTER TABLE amonet_materia_prima ADD COLUMN status BOOLEAN NOT NULL DEFAULT TRUE;

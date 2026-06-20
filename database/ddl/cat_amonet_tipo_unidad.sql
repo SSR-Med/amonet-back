@@ -6,3 +6,5 @@ CREATE TABLE cat_amonet_tipo_unidad (
     abreviacion VARCHAR(20) NOT NULL,
     UNIQUE (nombre, abreviacion)
 );
+
+ALTER TABLE cat_amonet_tipo_unidad ADD COLUMN status BOOLEAN NOT NULL DEFAULT TRUE;

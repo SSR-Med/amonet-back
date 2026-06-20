@@ -18,6 +18,7 @@ class MarcaQueryBuilder:
     def build(self) -> Callable:
         return (
             QueryBuilder()
+            .and_filter(MarcaConfiguration.status == True)
             .and_if_not_empty(
                 self._dto.nombre,
                 lambda: func.upper(

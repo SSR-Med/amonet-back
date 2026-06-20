@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.configurations import register_exception_handlers
-from api.controllers import inventario_router, logs_router, marca_router, materia_prima_router, producto_router, usuario_router
+from api.controllers import inventario_router, logs_router, marca_router, materia_prima_router, orden_produccion_router, producto_router, usuario_router
 from api.crons import scheduler, setup
 from infrastructure.dataaccess import init_db
 from infrastructure.services import LogUploader, get_settings
@@ -44,6 +44,7 @@ def create_app() -> FastAPI:
     app.include_router(logs_router, prefix="/api/v1")
     app.include_router(marca_router, prefix="/api/v1")
     app.include_router(materia_prima_router, prefix="/api/v1")
+    app.include_router(orden_produccion_router, prefix="/api/v1")
     app.include_router(producto_router, prefix="/api/v1")
     app.include_router(usuario_router, prefix="/api/v1")
 

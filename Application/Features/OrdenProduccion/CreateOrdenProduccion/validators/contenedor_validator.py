@@ -65,6 +65,11 @@ class ContenedorValidator:
                 str(contenedor.amonet_inventario_materia_prima_id),
             )
 
+        if inventario.status is not True:
+            raise ConflictException(
+                f"Inventory '{contenedor.amonet_inventario_materia_prima_id}' is not active"
+            )
+
         if inventario.amonet_materia_prima_id != mp_dto.amonet_materia_prima_id:
             raise ConflictException(
                 f"Container '{cont_dto.amonet_inventario_materia_prima_contenedor_id}' "

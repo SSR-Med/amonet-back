@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from sqlalchemy import String, UniqueConstraint
+from sqlalchemy import Boolean, String, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -18,3 +18,4 @@ class CatalogoTipoUnidadConfiguration(Base):
     )
     nombre: Mapped[str] = mapped_column(String(255), nullable=False)
     abreviacion: Mapped[str] = mapped_column(String(20), nullable=False)
+    status: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)

@@ -27,5 +27,11 @@ class GetAllTiposMateriaPrimaQueryHandler:
     async def handle(
         self, query: GetAllTiposMateriaPrimaQuery
     ) -> List[TipoMateriaPrimaResponseDto]:
-        items, _, _, _ = await self._repository.get_all(page=1, page_size=100)
+        items, _, _, _ = await self._repository.get_all(
+            page=1,
+            page_size=100,
+            where=lambda q: q.where(
+                CatalogoTipoMateriaPrimaConfiguration.status == True
+            ),
+        )
         return TipoMateriaPrimaMapper.to_list(items)

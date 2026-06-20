@@ -6,3 +6,4 @@ from uuid import UUID, uuid4
 class Marca:
     id: UUID = field(default_factory=uuid4)
     nombre: str = ""
+    status: bool = True
