@@ -1,5 +1,7 @@
 ADMIN = "ADMIN"
 
+ESTADO_ORDEN_PRODUCCION_ORDENADO = "ORDENADO"
+
 LOGS = "logs"
 
 COMPRESSED_EXTENSIONS = "zip, tar, gz, rar, 7z, bz2, xz, zst"
