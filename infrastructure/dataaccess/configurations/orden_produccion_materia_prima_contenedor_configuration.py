@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from sqlalchemy import CheckConstraint, ForeignKey, Integer, UniqueConstraint
+from sqlalchemy import CheckConstraint, ForeignKey, Integer, Numeric, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -16,6 +16,7 @@ class OrdenProduccionMateriaPrimaContenedorConfiguration(Base):
             name="uq_orden_prod_mat_prima_cont",
         ),
         CheckConstraint("cantidad > 0", name="ck_orden_prod_mat_prima_cont_cantidad"),
+        CheckConstraint("coste > 0", name="ck_orden_prod_mat_prima_cont_coste"),
     )
 
     id_amonet_orden_produccion_materia_prima_contenedor: Mapped[UUID] = mapped_column(
@@ -38,6 +39,7 @@ class OrdenProduccionMateriaPrimaContenedorConfiguration(Base):
         nullable=False,
     )
     cantidad: Mapped[int] = mapped_column(Integer, nullable=False)
+    coste: Mapped[float] = mapped_column(Numeric(18, 2), nullable=False)
 
     orden_produccion_materia_prima = relationship(
         "OrdenProduccionMateriaPrimaConfiguration", back_populates="contenedores"

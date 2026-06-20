@@ -19,6 +19,7 @@ class OrdenProduccionConfiguration(Base):
         UUID(as_uuid=True), primary_key=True, default=uuid4
     )
     observacion_creacion: Mapped[str] = mapped_column(Text, nullable=True)
+    descripcion: Mapped[str] = mapped_column(Text, nullable=False)
     amonet_producto_id: Mapped[UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("amonet_producto.id_amonet_producto", ondelete="CASCADE"),

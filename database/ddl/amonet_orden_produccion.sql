@@ -3,6 +3,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE amonet_orden_produccion (
     id_amonet_orden_produccion UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     observacion_creacion TEXT,
+    descripcion TEXT NOT NULL,
     amonet_producto_id UUID NOT NULL,
     fecha_alta TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     usuario_alta UUID NOT NULL,
