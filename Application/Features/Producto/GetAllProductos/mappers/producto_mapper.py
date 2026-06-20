@@ -9,6 +9,7 @@ from Application.Features.Producto.GetAllProductos.dtos import (
 )
 from infrastructure.dataaccess.configurations import (
     ProductoConfiguration,
+    ProductoMateriaPrimaConfiguration,
 )
 
 
@@ -19,7 +20,7 @@ class ProductoLoaderOptions:
         return [
             selectinload(ProductoConfiguration.marca),
             selectinload(ProductoConfiguration.materias_primas).selectinload(
-                "materia_prima"
+                ProductoMateriaPrimaConfiguration.materia_prima
             ),
         ]
 

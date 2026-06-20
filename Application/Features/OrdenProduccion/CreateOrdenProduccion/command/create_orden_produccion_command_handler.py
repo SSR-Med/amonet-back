@@ -13,13 +13,14 @@ from Application.Features.OrdenProduccion.CreateOrdenProduccion.mappers import (
 from Application.Features.OrdenProduccion.CreateOrdenProduccion.validators import (
     CreateOrdenProduccionValidator,
 )
-from core.dtos import CurrentUserDto
+from core.dtos import AuditLogDto, CurrentUserDto
 from infrastructure.dataaccess.configurations import (
     InventarioMateriaPrimaContenedorConfiguration,
     OrdenProduccionConfiguration,
 )
 from infrastructure.dataaccess.repository import Repository
 from infrastructure.dataaccess.unit_of_work import UnitOfWork
+from infrastructure.services import AuditLogger
 
 
 class CreateOrdenProduccionCommandHandler:
@@ -65,6 +66,12 @@ class CreateOrdenProduccionCommandHandler:
                         await self._contenedor_repo.update(db_contenedor)
 
             await self._unit_of_work.commit()
+
+            AuditLogger.log(AuditLogDto(
+                usuario=current_user.documento,
+                feature=type(self).__name__,
+                datos=command.model_dump(),
+            ))
 
         except Exception:
             await self._unit_of_work.rollback()
