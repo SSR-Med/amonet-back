@@ -3,7 +3,8 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.dependencies import get_current_user
+from api.dependencies import get_current_user, require_roles
+from core.constants import JEFE_PRODUCCION
 from Application.Features.OrdenProduccion.CreateOrdenProduccion.command import (
     CreateOrdenProduccionCommand,
     CreateOrdenProduccionCommandHandler,
@@ -49,7 +50,7 @@ async def get_estados(
 async def create(
     command: CreateOrdenProduccionCommand,
     session: AsyncSession = Depends(get_async_session),
-    current_user: CurrentUserDto = Depends(get_current_user),
+    current_user: CurrentUserDto = Depends(require_roles([JEFE_PRODUCCION])),
 ):
     handler = CreateOrdenProduccionCommandHandler(session)
     return await handler.handle(command, current_user)
