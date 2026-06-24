@@ -21,6 +21,10 @@ from Application.Features.OrdenProduccion.GetOrdenProduccionById.query import (
     GetOrdenProduccionByIdQuery,
     GetOrdenProduccionByIdQueryHandler,
 )
+from Application.Features.OrdenProduccion.UpdateOrdenProduccionEstado.command import (
+    UpdateOrdenProduccionEstadoCommand,
+    UpdateOrdenProduccionEstadoCommandHandler,
+)
 from core.dtos import CurrentUserDto
 from infrastructure.dataaccess import get_async_session
 
@@ -54,6 +58,17 @@ async def create(
 ):
     handler = CreateOrdenProduccionCommandHandler(session)
     return await handler.handle(command, current_user)
+
+
+@router.patch("/{id}/estado")
+async def update_estado(
+    id: UUID,
+    command: UpdateOrdenProduccionEstadoCommand,
+    session: AsyncSession = Depends(get_async_session),
+    current_user: CurrentUserDto = Depends(get_current_user),
+):
+    handler = UpdateOrdenProduccionEstadoCommandHandler(session)
+    return await handler.handle(id, command, current_user)
 
 
 @router.get("/{id}")

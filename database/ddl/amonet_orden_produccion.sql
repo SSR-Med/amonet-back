@@ -21,3 +21,5 @@ CREATE TABLE amonet_orden_produccion (
         ON DELETE CASCADE,
     CONSTRAINT ck_orden_produccion_coste CHECK (coste >= 0)
 );
+
+ALTER TABLE amonet_orden_produccion ADD COLUMN cancel_razon_descripcion TEXT NULL;

@@ -102,6 +102,7 @@ class OrdenProduccionMapper:
             fecha_alta=model.fecha_alta,
             fecha_modifica=model.fecha_modifica,
             coste=float(model.coste),
+            cancel_razon_descripcion=model.cancel_razon_descripcion,
             producto=ProductoInfoDto(
                 id=producto.id_amonet_producto if producto else "",
                 codigo=producto.codigo if producto else "",

@@ -68,6 +68,7 @@ class OrdenProduccionResponseDto:
         fecha_alta: datetime,
         fecha_modifica: Optional[datetime],
         coste: float,
+        cancel_razon_descripcion: Optional[str],
         producto: ProductoInfoDto,
         estado_produccion: EstadoProduccionInfoDto,
         usuario_alta: UsuarioInfoDto,
@@ -81,6 +82,7 @@ class OrdenProduccionResponseDto:
         self.fecha_alta = fecha_alta
         self.fecha_modifica = fecha_modifica
         self.coste = coste
+        self.cancel_razon_descripcion = cancel_razon_descripcion
         self.producto = producto
         self.estado_produccion = estado_produccion
         self.usuario_alta = usuario_alta

@@ -16,3 +16,4 @@ class OrdenProduccion:
     usuario_modifica: Optional[UUID] = None
     amonet_estado_produccion_id: UUID = field(default_factory=uuid4)
     coste: float = 0.0
+    cancel_razon_descripcion: Optional[str] = None

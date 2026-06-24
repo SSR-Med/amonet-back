@@ -46,6 +46,7 @@ class OrdenProduccionConfiguration(Base):
         nullable=False,
     )
     coste: Mapped[float] = mapped_column(Numeric(18, 2), nullable=False, default=0)
+    cancel_razon_descripcion: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
     producto = relationship("ProductoConfiguration")
     estado_produccion = relationship("CatalogoEstadoProduccionConfiguration")
