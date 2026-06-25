@@ -1,4 +1,5 @@
-from fastapi import Depends, Header
+from fastapi import Depends
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -8,15 +9,14 @@ from infrastructure.dataaccess import get_async_session
 from infrastructure.dataaccess.configurations import UsuarioConfiguration
 from infrastructure.services import JwtService
 
+security = HTTPBearer(scheme_name="BearerAuth")
+
 
 async def get_current_user(
-    authorization: str = Header(...),
+    credentials: HTTPAuthorizationCredentials = Depends(security),
     session: AsyncSession = Depends(get_async_session),
 ) -> CurrentUserDto:
-    if not authorization.startswith("Bearer "):
-        raise AuthenticationException("Invalid authorization header")
-
-    token = authorization.removeprefix("Bearer ")
+    token = credentials.credentials
 
     try:
         payload = JwtService.decode(token)
