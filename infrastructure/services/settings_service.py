@@ -23,6 +23,7 @@ class SettingsService(BaseSettings):
     S3_REGION: str = "us-east-1"
     S3_BUCKET: str = "amonet"
     S3_EVIDENCIA_PREFIX: str = "inventario/evidencia"
+    S3_BACKUP_PREFIX: str = "backups"
 
 
 @lru_cache
