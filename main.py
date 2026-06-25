@@ -30,13 +30,15 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=settings.CORS_ORIGINS.split(","),
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+    origins = settings.CORS_ORIGINS.split(",")
+    cors_kwargs = {
+        "allow_origins": origins if origins != ["*"] else ["*"],
+        "allow_methods": ["*"],
+        "allow_headers": ["*"],
+        "allow_credentials": origins != ["*"],
+    }
+
+    app.add_middleware(CORSMiddleware, **cors_kwargs)
 
     register_exception_handlers(app)
 
