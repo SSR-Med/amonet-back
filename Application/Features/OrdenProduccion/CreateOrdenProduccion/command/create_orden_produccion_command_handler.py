@@ -1,3 +1,4 @@
+from sqlalchemy import update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from Application.Features.OrdenProduccion.CreateOrdenProduccion.command import (
@@ -14,6 +15,7 @@ from Application.Features.OrdenProduccion.CreateOrdenProduccion.validators impor
     CreateOrdenProduccionValidator,
 )
 from core.dtos import AuditLogDto, CurrentUserDto
+from core.exceptions import ConflictException
 from infrastructure.dataaccess.configurations import (
     InventarioMateriaPrimaContenedorConfiguration,
     OrdenProduccionConfiguration,
@@ -26,14 +28,12 @@ from infrastructure.services import AuditLogger
 class CreateOrdenProduccionCommandHandler:
 
     def __init__(self, session: AsyncSession) -> None:
+        self._session = session
         self._validator = CreateOrdenProduccionValidator(session)
         self._estado_enricher = EstadoProduccionEnricher(session)
         self._coste_enricher = CosteEnricher(session)
         self._mapper = CreateOrdenProduccionMapper()
         self._repository = Repository(session, OrdenProduccionConfiguration)
-        self._contenedor_repo = Repository(
-            session, InventarioMateriaPrimaContenedorConfiguration
-        )
         self._unit_of_work = UnitOfWork(session)
 
     async def handle(
@@ -55,15 +55,21 @@ class CreateOrdenProduccionCommandHandler:
 
             for mp in command.materias_primas:
                 for cont_dto in mp.contenedores:
-                    db_contenedor = await self._contenedor_repo.first_or_default(
-                        lambda q: q.where(
+                    result = await self._session.execute(
+                        update(InventarioMateriaPrimaContenedorConfiguration)
+                        .where(
                             InventarioMateriaPrimaContenedorConfiguration.id_amonet_inventario_materia_prima_contenedor
-                            == cont_dto.amonet_inventario_materia_prima_contenedor_id
+                            == cont_dto.amonet_inventario_materia_prima_contenedor_id,
+                            InventarioMateriaPrimaContenedorConfiguration.cantidad_disponible >= cont_dto.cantidad,
+                        )
+                        .values(
+                            cantidad_disponible=InventarioMateriaPrimaContenedorConfiguration.cantidad_disponible - cont_dto.cantidad
                         )
                     )
-                    if db_contenedor:
-                        db_contenedor.cantidad_disponible -= cont_dto.cantidad
-                        await self._contenedor_repo.update(db_contenedor)
+                    if result.rowcount == 0:
+                        raise ConflictException(
+                            f"Insufficient stock in container {cont_dto.amonet_inventario_materia_prima_contenedor_id}: requested {cont_dto.cantidad}"
+                        )
 
             await self._unit_of_work.commit()
 

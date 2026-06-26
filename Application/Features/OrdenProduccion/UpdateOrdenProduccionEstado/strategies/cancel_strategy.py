@@ -1,3 +1,4 @@
+from sqlalchemy import update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from Application.Features.OrdenProduccion.UpdateOrdenProduccionEstado.command import (
@@ -27,21 +28,18 @@ class CancelStrategy(BaseStrategy):
         command: UpdateOrdenProduccionEstadoCommand,
         session: AsyncSession,
     ) -> None:
+        self._session = session
         self._contenedor_orden_repo = Repository(
             session, OrdenProduccionMateriaPrimaContenedorConfiguration
-        )
-        self._inventario_contenedor_repo = Repository(
-            session, InventarioMateriaPrimaContenedorConfiguration
         )
 
         order.amonet_estado_produccion_id = command.amonet_estado_produccion_id
         order.cancel_razon_descripcion = command.cancel_razon_descripcion
-        await self._restore_containers(order, session)
+        await self._restore_containers(order)
 
     async def _restore_containers(
         self,
         order: OrdenProduccionConfiguration,
-        session: AsyncSession,
     ) -> None:
         items, _, _, _ = await self._contenedor_orden_repo.get_all(
             page=1,
@@ -57,11 +55,13 @@ class CancelStrategy(BaseStrategy):
         )
 
         for order_cont in items:
-            db_contenedor = await self._inventario_contenedor_repo.first_or_default(
-                lambda q: q.where(
+            await self._session.execute(
+                update(InventarioMateriaPrimaContenedorConfiguration)
+                .where(
                     InventarioMateriaPrimaContenedorConfiguration.id_amonet_inventario_materia_prima_contenedor
-                    == order_cont.amonet_inventario_materia_prima_contenedor_id
+                    == order_cont.amonet_inventario_materia_prima_contenedor_id,
+                )
+                .values(
+                    cantidad_disponible=InventarioMateriaPrimaContenedorConfiguration.cantidad_disponible + order_cont.cantidad
                 )
             )
-            if db_contenedor:
-                db_contenedor.cantidad_disponible += order_cont.cantidad
