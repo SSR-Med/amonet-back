@@ -22,7 +22,10 @@ class GetSprintByIdQueryHandler:
 
     async def handle(self, query: GetSprintByIdQuery) -> SprintResponseDto:
         model = await self._repository.first_or_default(
-            lambda q: q.where(SprintConfiguration.id_amonet_sprint == query.id),
+            lambda q: q.where(
+                SprintConfiguration.id_amonet_sprint == query.id,
+                SprintConfiguration.activo == True,
+            ),
             loader_options=SprintLoaderOptions.get(),
         )
         if model is None:

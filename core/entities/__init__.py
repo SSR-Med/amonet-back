@@ -20,3 +20,5 @@ from .amonet_columna_kanban import ColumnaKanban
 from .amonet_sprint import Sprint
 from .amonet_tarea_sprint import TareaSprint
 from .amonet_comentario_tarea import ComentarioTarea
+from .amonet_prioridad_kanban import PrioridadKanban
+from .amonet_tag_kanban import TagKanban

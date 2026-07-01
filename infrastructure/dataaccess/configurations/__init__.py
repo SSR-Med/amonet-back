@@ -32,3 +32,5 @@ from .amonet_columna_kanban_configuration import ColumnaKanbanConfiguration
 from .amonet_sprint_configuration import SprintConfiguration
 from .amonet_tarea_sprint_configuration import TareaSprintConfiguration
 from .amonet_comentario_tarea_configuration import ComentarioTareaConfiguration
+from .amonet_prioridad_kanban_configuration import PrioridadKanbanConfiguration
+from .amonet_tag_kanban_configuration import TagKanbanConfiguration

@@ -8,3 +8,6 @@ from .usuario_controller import router as usuario_router
 from .columna_kanban_controller import router as columna_kanban_router
 from .sprint_controller import router as sprint_router
 from .comentario_tarea_controller import router as comentario_tarea_router
+from .tarea_sprint_controller import router as tarea_sprint_router
+from .prioridad_kanban_controller import router as prioridad_kanban_router
+from .tag_kanban_controller import router as tag_kanban_router

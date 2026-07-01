@@ -16,6 +16,7 @@ class SprintQueryBuilder:
     def build(self) -> Callable:
         return (
             QueryBuilder()
+            .and_filter(SprintConfiguration.activo == True)
             .and_if_not_none(
                 self._dto.fecha_inicial,
                 lambda: SprintConfiguration.fecha_inicio >= self._dto.fecha_inicial,

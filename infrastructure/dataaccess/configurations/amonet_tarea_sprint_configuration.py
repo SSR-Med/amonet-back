@@ -2,8 +2,8 @@ from datetime import datetime
 from typing import Optional
 from uuid import uuid4
 
-from sqlalchemy import CheckConstraint, DateTime, ForeignKey, String, UniqueConstraint, func
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Boolean, DateTime, ForeignKey, String, func
+from sqlalchemy.dialects.postgresql import JSON, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from infrastructure.dataaccess.base import Base
@@ -11,15 +11,6 @@ from infrastructure.dataaccess.base import Base
 
 class TareaSprintConfiguration(Base):
     __tablename__ = "amonet_tarea_sprint"
-    __table_args__ = (
-        UniqueConstraint(
-            "posicion",
-            "amonet_sprint_id",
-            "amonet_columna_kanban_id",
-            name="uq_tarea_sprint_posicion_sprint_columna",
-        ),
-        CheckConstraint("posicion >= 0", name="ck_tarea_sprint_posicion"),
-    )
 
     id_amonet_tarea_sprint: Mapped[UUID] = mapped_column(
         UUID(as_uuid=True), primary_key=True, default=uuid4
@@ -30,8 +21,22 @@ class TareaSprintConfiguration(Base):
     descripcion: Mapped[str] = mapped_column(
         String(255), nullable=False
     )
-    posicion: Mapped[int] = mapped_column(
-        nullable=False
+    activo: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, default=True
+    )
+    asignado: Mapped[UUID] = mapped_column(
+        UUID(as_uuid=True), nullable=False
+    )
+    fecha_vencimiento: Mapped[Optional[datetime]] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    tags: Mapped[Optional[list]] = mapped_column(
+        JSON, nullable=True
+    )
+    amonet_prioridad_kanban_id: Mapped[Optional[UUID]] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("amonet_prioridad_kanban.id_amonet_prioridad_kanban", ondelete="SET NULL"),
+        nullable=True,
     )
     amonet_sprint_id: Mapped[UUID] = mapped_column(
         UUID(as_uuid=True),
@@ -58,6 +63,12 @@ class TareaSprintConfiguration(Base):
 
     sprint = relationship("SprintConfiguration")
     columna = relationship("ColumnaKanbanConfiguration")
+    prioridad = relationship("PrioridadKanbanConfiguration")
+    asignado_rel = relationship(
+        "UsuarioConfiguration",
+        primaryjoin="UsuarioConfiguration.id_amonet_usuario == foreign(TareaSprintConfiguration.asignado)",
+        uselist=False,
+    )
     usuario_alta_rel = relationship(
         "UsuarioConfiguration",
         primaryjoin="UsuarioConfiguration.id_amonet_usuario == foreign(TareaSprintConfiguration.usuario_alta)",
