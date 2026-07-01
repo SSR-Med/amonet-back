@@ -28,3 +28,4 @@ from .orden_produccion_variable_global_configuration import (
 from .variables_globales_materia_prima_configuration import (
     VariablesGlobalesMateriaPrimaConfiguration,
 )
+from .amonet_columna_kanban_configuration import ColumnaKanbanConfiguration

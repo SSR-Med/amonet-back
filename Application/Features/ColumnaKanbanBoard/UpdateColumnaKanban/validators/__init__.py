@@ -1,0 +1,1 @@
+from .update_columna_kanban_validator import UpdateColumnaKanbanValidator
