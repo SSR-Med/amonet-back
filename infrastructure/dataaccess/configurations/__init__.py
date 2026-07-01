@@ -29,3 +29,6 @@ from .variables_globales_materia_prima_configuration import (
     VariablesGlobalesMateriaPrimaConfiguration,
 )
 from .amonet_columna_kanban_configuration import ColumnaKanbanConfiguration
+from .amonet_sprint_configuration import SprintConfiguration
+from .amonet_tarea_sprint_configuration import TareaSprintConfiguration
+from .amonet_comentario_tarea_configuration import ComentarioTareaConfiguration

@@ -17,3 +17,6 @@ from .orden_produccion_materia_prima_contenedor import (
 from .orden_produccion_variable_global import OrdenProduccionVariableGlobal
 from .variables_globales_materia_prima import VariablesGlobalesMateriaPrima
 from .amonet_columna_kanban import ColumnaKanban
+from .amonet_sprint import Sprint
+from .amonet_tarea_sprint import TareaSprint
+from .amonet_comentario_tarea import ComentarioTarea

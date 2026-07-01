@@ -17,6 +17,10 @@ from Application.Features.ColumnaKanbanBoard.GetColumnaKanbanById.query import (
     GetColumnaKanbanByIdQuery,
     GetColumnaKanbanByIdQueryHandler,
 )
+from Application.Features.ColumnaKanbanBoard.DeleteColumnaKanban.command import (
+    DeleteColumnaKanbanCommand,
+    DeleteColumnaKanbanCommandHandler,
+)
 from Application.Features.ColumnaKanbanBoard.UpdateColumnaKanban.command import (
     UpdateColumnaKanbanCommand,
     UpdateColumnaKanbanCommandHandler,
@@ -65,3 +69,13 @@ async def update(
 ):
     handler = UpdateColumnaKanbanCommandHandler(session)
     return await handler.handle(id, command, current_user)
+
+
+@router.delete("/{id}", status_code=204)
+async def delete(
+    id: UUID,
+    session: AsyncSession = Depends(get_async_session),
+    current_user: CurrentUserDto = Depends(get_current_user),
+):
+    handler = DeleteColumnaKanbanCommandHandler(session)
+    await handler.handle(DeleteColumnaKanbanCommand(id=id), current_user)

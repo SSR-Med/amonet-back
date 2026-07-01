@@ -13,7 +13,10 @@ class CreateColumnaKanbanValidator:
             raise ConflictException("Position must be greater than 0")
 
         existing_by_name = await self._repository.first_or_default(
-            lambda q: q.where(ColumnaKanbanConfiguration.nombre == nombre)
+            lambda q: q.where(
+                ColumnaKanbanConfiguration.nombre == nombre,
+                ColumnaKanbanConfiguration.activo == True,
+            )
         )
         if existing_by_name is not None:
             raise ConflictException(f"Column name '{nombre}' already exists")

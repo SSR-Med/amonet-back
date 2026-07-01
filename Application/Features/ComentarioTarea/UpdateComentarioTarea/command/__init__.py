@@ -1,0 +1,2 @@
+from .update_comentario_tarea_command import UpdateComentarioTareaCommand
+from .update_comentario_tarea_command_handler import UpdateComentarioTareaCommandHandler

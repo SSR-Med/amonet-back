@@ -24,7 +24,10 @@ class GetColumnaKanbanByIdQueryHandler:
         self, query: GetColumnaKanbanByIdQuery
     ) -> ColumnaKanbanResponseDto:
         model = await self._repository.first_or_default(
-            lambda q: q.where(ColumnaKanbanConfiguration.id_amonet_columna_kanban == query.id),
+            lambda q: q.where(
+                ColumnaKanbanConfiguration.id_amonet_columna_kanban == query.id,
+                ColumnaKanbanConfiguration.activo == True,
+            ),
             loader_options=ColumnaKanbanLoaderOptions.get(),
         )
         if model is None:

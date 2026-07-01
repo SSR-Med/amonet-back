@@ -1,0 +1,2 @@
+from .delete_comentario_tarea_command import DeleteComentarioTareaCommand
+from .delete_comentario_tarea_command_handler import DeleteComentarioTareaCommandHandler

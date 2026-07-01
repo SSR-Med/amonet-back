@@ -18,6 +18,7 @@ class ColumnaKanbanQueryBuilder:
     def build(self) -> Callable:
         return (
             QueryBuilder()
+            .and_filter(ColumnaKanbanConfiguration.activo == True)
             .and_if_not_empty(
                 self._dto.nombre,
                 lambda: func.upper(

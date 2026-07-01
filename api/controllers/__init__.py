@@ -6,3 +6,5 @@ from .orden_produccion_controller import router as orden_produccion_router
 from .producto_controller import router as producto_router
 from .usuario_controller import router as usuario_router
 from .columna_kanban_controller import router as columna_kanban_router
+from .sprint_controller import router as sprint_router
+from .comentario_tarea_controller import router as comentario_tarea_router
