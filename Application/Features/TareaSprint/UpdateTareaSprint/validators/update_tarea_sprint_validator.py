@@ -36,11 +36,12 @@ class UpdateTareaSprintValidator:
         amonet_prioridad_kanban_id: Optional[UUID] = None,
         tags: Optional[List[UUID]] = None,
     ) -> None:
-        sprint = await self._sprint_repository.first_or_default(
-            lambda q: q.where(SprintConfiguration.id_amonet_sprint == amonet_sprint_id)
-        )
-        if sprint is None:
-            raise ConflictException("Sprint not found")
+        if amonet_sprint_id is not None:
+            sprint = await self._sprint_repository.first_or_default(
+                lambda q: q.where(SprintConfiguration.id_amonet_sprint == amonet_sprint_id)
+            )
+            if sprint is None:
+                raise ConflictException("Sprint not found")
 
         columna = await self._columna_repository.first_or_default(
             lambda q: q.where(
@@ -51,11 +52,12 @@ class UpdateTareaSprintValidator:
         if columna is None:
             raise ConflictException("Column not found")
 
-        usuario = await self._usuario_repository.first_or_default(
-            lambda q: q.where(UsuarioConfiguration.id_amonet_usuario == asignado)
-        )
-        if usuario is None:
-            raise ConflictException("Assigned user not found")
+        if asignado is not None:
+            usuario = await self._usuario_repository.first_or_default(
+                lambda q: q.where(UsuarioConfiguration.id_amonet_usuario == asignado)
+            )
+            if usuario is None:
+                raise ConflictException("Assigned user not found")
 
         if amonet_prioridad_kanban_id:
             prioridad = await self._prioridad_repository.first_or_default(

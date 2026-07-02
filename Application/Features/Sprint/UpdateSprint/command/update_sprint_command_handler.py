@@ -43,7 +43,10 @@ class UpdateSprintCommandHandler:
 
         if command.principal is True:
             await self._session.execute(
-                update(SprintConfiguration).values(principal=False)
+                update(SprintConfiguration).values(
+                    principal=False,
+                    fecha_fin=datetime.now(timezone.utc),
+                )
             )
 
         model = UpdateSprintMapper.apply(model, command, current_user.id)

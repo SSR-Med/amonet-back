@@ -15,8 +15,8 @@ class ColumnaKanbanMapper:
         model: ColumnaKanbanConfiguration,
         current_user: Optional[CurrentUserDto] = None,
     ) -> ColumnaKanbanResponseDto:
-        usuario_alta_rel = model.usuario_alta_rel
-        usuario_modifica_rel = model.usuario_modifica_rel
+        usuario_alta_rel = model.__dict__.get('usuario_alta_rel')
+        usuario_modifica_rel = model.__dict__.get('usuario_modifica_rel')
 
         if usuario_alta_rel is not None:
             usuario_alta = UsuarioInfoDto(

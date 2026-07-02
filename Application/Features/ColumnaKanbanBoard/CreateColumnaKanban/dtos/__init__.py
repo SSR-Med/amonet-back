@@ -1,1 +1,1 @@
-from .columna_kanban_response_dto import ColumnaKanbanResponseDto
+from .columna_kanban_response_dto import ColumnaKanbanResponseDto, UsuarioInfoDto

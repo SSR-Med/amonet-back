@@ -1,2 +1,2 @@
 from .delete_prioridad_kanban_command import DeletePrioridadKanbanCommand
-from .delete_tag_command_handler import DeletePrioridadKanbanCommandHandler
+from .delete_prioridad_kanban_command_handler import DeletePrioridadKanbanCommandHandler

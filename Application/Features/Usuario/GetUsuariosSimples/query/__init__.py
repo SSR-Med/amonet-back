@@ -1,0 +1,1 @@
+from .get_usuarios_simples_query_handler import GetUsuariosSimplesQueryHandler

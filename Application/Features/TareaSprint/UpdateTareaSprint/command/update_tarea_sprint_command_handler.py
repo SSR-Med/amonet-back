@@ -50,8 +50,10 @@ class UpdateTareaSprintCommandHandler:
     async def handle(
         self, id: UUID, command: UpdateTareaSprintCommand, current_user: CurrentUserDto
     ) -> TareaSprintResponseDto:
-        command.titulo = command.titulo.strip().upper()
-        command.descripcion = command.descripcion.strip().upper()
+        if command.titulo is not None:
+            command.titulo = command.titulo.strip().upper()
+        if command.descripcion is not None:
+            command.descripcion = command.descripcion.strip().upper()
 
         model = await self._repository.first_or_default(
             lambda q: q.where(TareaSprintConfiguration.id_amonet_tarea_sprint == id)
@@ -59,9 +61,10 @@ class UpdateTareaSprintCommandHandler:
         if model is None:
             raise NotFoundException("TareaSprint", str(id))
 
-        await self._validator.validate(
-            command.amonet_sprint_id, command.amonet_columna_kanban_id, command.asignado, command.amonet_prioridad_kanban_id, command.tags
-        )
+        if any([command.amonet_sprint_id, command.amonet_columna_kanban_id, command.asignado, command.amonet_prioridad_kanban_id, command.tags]):
+            await self._validator.validate(
+                command.amonet_sprint_id, command.amonet_columna_kanban_id, command.asignado, command.amonet_prioridad_kanban_id, command.tags
+            )
 
         model = UpdateTareaSprintMapper.apply(model, command, current_user.id)
         await self._repository.update(model)

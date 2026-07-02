@@ -1,2 +1,2 @@
 from .create_prioridad_kanban_command import CreatePrioridadKanbanCommand
-from .create_tag_command_handler import CreatePrioridadKanbanCommandHandler
+from .create_prioridad_kanban_command_handler import CreatePrioridadKanbanCommandHandler

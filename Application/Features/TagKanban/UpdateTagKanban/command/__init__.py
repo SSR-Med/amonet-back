@@ -1,2 +1,2 @@
 from .update_tag_kanban_command import UpdateTagKanbanCommand
-from .update_tag_command_handler import UpdateTagKanbanCommandHandler
+from .update_tag_kanban_command_handler import UpdateTagKanbanCommandHandler

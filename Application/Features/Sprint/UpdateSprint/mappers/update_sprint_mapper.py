@@ -17,6 +17,8 @@ class UpdateSprintMapper:
     ) -> SprintConfiguration:
         if dto.principal is not None:
             model.principal = dto.principal
+            if dto.principal is True:
+                model.fecha_fin = None
         if dto.descripcion is not None:
             model.descripcion = dto.descripcion
         model.usuario_modifica = usuario_modifica

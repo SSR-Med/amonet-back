@@ -32,8 +32,8 @@ class CreateTareaSprintValidator:
         self,
         amonet_sprint_id: UUID,
         amonet_columna_kanban_id: UUID,
-        amonet_prioridad_kanban_id: Optional[UUID] = None,
         asignado: UUID,
+        amonet_prioridad_kanban_id: Optional[UUID] = None,
         tags: Optional[List[UUID]] = None,
     ) -> None:
         sprint = await self._sprint_repository.first_or_default(

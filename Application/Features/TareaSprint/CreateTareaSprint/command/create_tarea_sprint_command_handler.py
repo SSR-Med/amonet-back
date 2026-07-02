@@ -48,7 +48,7 @@ class CreateTareaSprintCommandHandler:
         command.descripcion = command.descripcion.strip().upper()
 
         await self._validator.validate(
-            command.amonet_sprint_id, command.amonet_columna_kanban_id, command.amonet_prioridad_kanban_id, command.asignado, command.tags
+            command.amonet_sprint_id, command.amonet_columna_kanban_id, command.asignado, command.amonet_prioridad_kanban_id, command.tags
         )
 
         model = CreateTareaSprintMapper.to_model(command, current_user.id)

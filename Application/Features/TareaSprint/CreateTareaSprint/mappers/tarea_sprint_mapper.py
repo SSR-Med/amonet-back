@@ -110,7 +110,7 @@ class TareaSprintMapper:
             titulo=model.titulo,
             descripcion=model.descripcion,
             asignado=TareaSprintMapper._map_usuario(
-                getattr(model, "asignado_rel", None),
+                model.__dict__.get('asignado_rel'),
                 model.asignado,
                 current_user,
             ),
@@ -120,13 +120,13 @@ class TareaSprintMapper:
             amonet_sprint_id=model.amonet_sprint_id,
             amonet_columna_kanban_id=model.amonet_columna_kanban_id,
             usuario_alta=TareaSprintMapper._map_usuario(
-                getattr(model, "usuario_alta_rel", None),
+                model.__dict__.get('usuario_alta_rel'),
                 model.usuario_alta,
                 current_user,
             ),
             fecha_alta=model.fecha_alta,
             usuario_modifica=TareaSprintMapper._map_usuario(
-                getattr(model, "usuario_modifica_rel", None),
+                model.__dict__.get('usuario_modifica_rel'),
                 None,
             ),
             fecha_modifica=model.fecha_modifica,
@@ -134,7 +134,7 @@ class TareaSprintMapper:
 
     @staticmethod
     def _map_prioridad_from_model(model: TareaSprintConfiguration) -> Optional[PrioridadInfoDto]:
-        prioridad_rel = getattr(model, "prioridad", None)
+        prioridad_rel = model.__dict__.get('prioridad')
         if prioridad_rel is not None:
             return PrioridadInfoDto(
                 id=prioridad_rel.id_amonet_prioridad_kanban,

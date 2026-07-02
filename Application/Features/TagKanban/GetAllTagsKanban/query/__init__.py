@@ -1,2 +1,2 @@
 from .get_all_tags_kanban_query import GetAllTagsKanbanQuery
-from .get_all_tags_query_handler import GetAllTagsKanbanQueryHandler
+from .get_all_tags_kanban_query_handler import GetAllTagsKanbanQueryHandler

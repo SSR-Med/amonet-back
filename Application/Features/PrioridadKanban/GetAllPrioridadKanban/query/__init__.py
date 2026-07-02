@@ -1,2 +1,2 @@
-from .get_all_tags_kanban_query import GetAllPrioridadKanbanQuery
-from .get_all_tags_query_handler import GetAllPrioridadKanbanQueryHandler
+from .get_all_prioridad_kanban_query import GetAllPrioridadKanbanQuery
+from .get_all_prioridad_kanban_query_handler import GetAllPrioridadKanbanQueryHandler

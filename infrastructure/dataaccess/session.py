@@ -13,6 +13,8 @@ async def init_db() -> None:
         settings.DATABASE_URL,
         echo=settings.DEBUG,
         connect_args={"ssl": "require"},
+        pool_pre_ping=True,
+        pool_recycle=300,
     )
     async_session_maker = async_sessionmaker(
         engine, class_=AsyncSession, expire_on_commit=False

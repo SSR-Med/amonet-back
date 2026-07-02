@@ -1,2 +1,2 @@
 from .create_tag_kanban_command import CreateTagKanbanCommand
-from .create_tag_command_handler import CreateTagKanbanCommandHandler
+from .create_tag_kanban_command_handler import CreateTagKanbanCommandHandler

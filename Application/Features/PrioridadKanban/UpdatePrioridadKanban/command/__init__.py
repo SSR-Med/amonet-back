@@ -1,2 +1,2 @@
 from .update_prioridad_kanban_command import UpdatePrioridadKanbanCommand
-from .update_tag_command_handler import UpdatePrioridadKanbanCommandHandler
+from .update_prioridad_kanban_command_handler import UpdatePrioridadKanbanCommandHandler

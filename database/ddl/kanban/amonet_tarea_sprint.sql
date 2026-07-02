@@ -22,5 +22,5 @@ CREATE TABLE amonet_tarea_sprint (
     CONSTRAINT fk_tarea_sprint_columna
         FOREIGN KEY (amonet_columna_kanban_id)
         REFERENCES amonet_columna_kanban(id_amonet_columna_kanban)
-        ON DELETE CASCADE,
+        ON DELETE CASCADE
 );

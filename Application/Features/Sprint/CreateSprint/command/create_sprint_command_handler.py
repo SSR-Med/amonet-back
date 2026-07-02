@@ -31,7 +31,10 @@ class CreateSprintCommandHandler:
         self, command: CreateSprintCommand, current_user: CurrentUserDto
     ) -> SprintResponseDto:
         await self._session.execute(
-            update(SprintConfiguration).values(principal=False)
+            update(SprintConfiguration).values(
+                principal=False,
+                fecha_fin=datetime.now(timezone.utc),
+            )
         )
 
         model = CreateSprintMapper.to_model(

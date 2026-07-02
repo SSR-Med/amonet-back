@@ -17,7 +17,7 @@ class ComentarioTareaMapper:
         model: ComentarioTareaConfiguration,
         current_user: Optional[CurrentUserDto] = None,
     ) -> ComentarioTareaResponseDto:
-        usuario_alta_rel = model.usuario_alta_rel
+        usuario_alta_rel = model.__dict__.get('usuario_alta_rel')
 
         if usuario_alta_rel is not None:
             usuario_alta = UsuarioInfoDto(

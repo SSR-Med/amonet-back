@@ -1,3 +1,4 @@
+from typing import Optional
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query
@@ -34,6 +35,9 @@ from Application.Features.Usuario.GetAllUsuarios.query import (
     GetAllUsuariosQuery,
     GetAllUsuariosQueryHandler,
 )
+from Application.Features.Usuario.GetUsuariosSimples.query import (
+    GetUsuariosSimplesQueryHandler,
+)
 from Application.Features.Usuario.Login.query import (
     LoginQuery,
     LoginQueryHandler,
@@ -60,6 +64,17 @@ async def get_current(
 ):
     handler = GetCurrentUsuarioQueryHandler(session)
     return await handler.handle(GetCurrentUsuarioQuery(), current_user)
+
+
+@router.get("/simples")
+async def get_usuarios_simples(
+    documento: Optional[str] = Query(None),
+    nombre: Optional[str] = Query(None),
+    session: AsyncSession = Depends(get_async_session),
+    current_user: CurrentUserDto = Depends(get_current_user),
+):
+    handler = GetUsuariosSimplesQueryHandler(session)
+    return await handler.handle(documento=documento, nombre=nombre)
 
 
 @router.get("/roles")

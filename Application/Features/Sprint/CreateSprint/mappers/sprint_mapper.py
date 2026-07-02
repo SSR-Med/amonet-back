@@ -17,7 +17,7 @@ class SprintMapper:
         model: SprintConfiguration,
         current_user: Optional[CurrentUserDto] = None,
     ) -> SprintResponseDto:
-        usuario_alta_rel = model.usuario_alta_rel
+        usuario_alta_rel = model.__dict__.get('usuario_alta_rel')
 
         if usuario_alta_rel is not None:
             usuario_alta = UsuarioInfoDto(
@@ -36,7 +36,7 @@ class SprintMapper:
                 id=model.usuario_alta, documento="", nombre=""
             )
 
-        usuario_modifica_rel = model.usuario_modifica_rel
+        usuario_modifica_rel = model.__dict__.get('usuario_modifica_rel')
         if usuario_modifica_rel is not None:
             usuario_modifica = UsuarioInfoDto(
                 id=usuario_modifica_rel.id_amonet_usuario,

@@ -22,7 +22,7 @@ class CreateTareaSprintMapper:
             asignado=dto.asignado,
             fecha_vencimiento=dto.fecha_vencimiento,
             amonet_prioridad_kanban_id=dto.amonet_prioridad_kanban_id,
-            tags=dto.tags,
+            tags=[str(t) for t in dto.tags] if dto.tags else None,
             amonet_sprint_id=dto.amonet_sprint_id,
             amonet_columna_kanban_id=dto.amonet_columna_kanban_id,
             usuario_alta=usuario_alta,
