@@ -15,8 +15,10 @@ class UpdateColumnaKanbanMapper:
         dto: UpdateColumnaKanbanCommand,
         usuario_modifica: UUID,
     ) -> ColumnaKanbanConfiguration:
-        model.nombre = dto.nombre
-        model.posicion = dto.posicion
+        if dto.nombre is not None:
+            model.nombre = dto.nombre
+        if dto.posicion is not None:
+            model.posicion = dto.posicion
         model.usuario_modifica = usuario_modifica
         model.fecha_modifica = datetime.now(timezone.utc)
         return model

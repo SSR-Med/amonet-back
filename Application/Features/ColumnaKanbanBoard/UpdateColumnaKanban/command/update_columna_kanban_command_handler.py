@@ -36,7 +36,8 @@ class UpdateColumnaKanbanCommandHandler:
     async def handle(
         self, id: UUID, command: UpdateColumnaKanbanCommand, current_user: CurrentUserDto
     ) -> ColumnaKanbanResponseDto:
-        command.nombre = command.nombre.strip().upper()
+        if command.nombre is not None:
+            command.nombre = command.nombre.strip().upper()
 
         model = await self._repository.first_or_default(
             lambda q: q.where(ColumnaKanbanConfiguration.id_amonet_columna_kanban == id)
@@ -44,7 +45,8 @@ class UpdateColumnaKanbanCommandHandler:
         if model is None:
             raise NotFoundException("ColumnaKanban", str(id))
 
-        await self._validator.validate(command.nombre, command.posicion, id)
+        if command.nombre is not None or command.posicion is not None:
+            await self._validator.validate(command.nombre, command.posicion, id)
 
         model = UpdateColumnaKanbanMapper.apply(model, command, current_user.id)
         await self._repository.update(model)

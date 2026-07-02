@@ -1,8 +1,8 @@
-from uuid import UUID
+from typing import Optional
 
 from pydantic import BaseModel
 
 
 class UpdateColumnaKanbanCommand(BaseModel):
-    nombre: str
-    posicion: int
+    nombre: Optional[str] = None
+    posicion: Optional[int] = None

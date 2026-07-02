@@ -25,6 +25,10 @@ from Application.Features.ColumnaKanbanBoard.UpdateColumnaKanban.command import 
     UpdateColumnaKanbanCommand,
     UpdateColumnaKanbanCommandHandler,
 )
+from Application.Features.ColumnaKanbanBoard.ReorderColumnasKanban.command import (
+    ReorderColumnasKanbanCommand,
+    ReorderColumnasKanbanCommandHandler,
+)
 from infrastructure.dataaccess import get_async_session
 
 router = APIRouter(prefix="/columnas-kanban", tags=["Columnas Kanban"])
@@ -57,6 +61,16 @@ async def create(
     current_user: CurrentUserDto = Depends(get_current_user),
 ):
     handler = CreateColumnaKanbanCommandHandler(session)
+    return await handler.handle(command, current_user)
+
+
+@router.put("/orden")
+async def reorder(
+    command: ReorderColumnasKanbanCommand,
+    session: AsyncSession = Depends(get_async_session),
+    current_user: CurrentUserDto = Depends(get_current_user),
+):
+    handler = ReorderColumnasKanbanCommandHandler(session)
     return await handler.handle(command, current_user)
 
 
