@@ -1,6 +1,11 @@
 from typing import Any, Callable, List, Optional
 
 
+def escape_like(value: str) -> str:
+    sanitized = value.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+    return f"%{sanitized}%"
+
+
 class QueryBuilder:
 
     def __init__(self) -> None:

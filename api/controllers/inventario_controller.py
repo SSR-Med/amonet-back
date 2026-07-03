@@ -30,6 +30,7 @@ from Application.Features.Inventario.GetAllInventario.query import (
 )
 from core.dtos import CurrentUserDto
 from infrastructure.dataaccess import get_async_session
+from infrastructure.services import get_settings
 
 router = APIRouter(prefix="/inventario", tags=["Inventario"])
 
@@ -73,6 +74,13 @@ async def update_inventario(
     archivo: UploadFile = File(None),
     data: str = Form(None),
 ):
+    if archivo is not None:
+        max_size = get_settings().UPLOAD_MAX_SIZE_MB * 1024 * 1024
+        content = await archivo.read(max_size + 1)
+        if len(content) > max_size:
+            from core.exceptions import BadRequestException
+            raise BadRequestException(f"El archivo excede el tamaño máximo de {get_settings().UPLOAD_MAX_SIZE_MB} MB")
+        await archivo.seek(0)
     command = await UpdateInventarioCommand.from_request(request, archivo, data)
     handler = UpdateInventarioCommandHandler(session)
     await handler.handle(id, command, current_user)
@@ -86,7 +94,11 @@ async def create_inventario(
     current_user: CurrentUserDto = Depends(get_current_user),
 ):
     parsed_items = [CreateInventarioItemDto(**item) for item in json.loads(items)]
-    archivo_bytes = await archivo.read()
+    max_size = get_settings().UPLOAD_MAX_SIZE_MB * 1024 * 1024
+    archivo_bytes = await archivo.read(max_size + 1)
+    if len(archivo_bytes) > max_size:
+        from core.exceptions import BadRequestException
+        raise BadRequestException(f"El archivo excede el tamaño máximo de {get_settings().UPLOAD_MAX_SIZE_MB} MB")
 
     command = CreateInventarioCommand(
         items=parsed_items,

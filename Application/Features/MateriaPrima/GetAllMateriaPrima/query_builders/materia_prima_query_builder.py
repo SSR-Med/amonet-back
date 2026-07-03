@@ -6,6 +6,7 @@ from infrastructure.dataaccess.configurations import (
     MateriaPrimaConfiguration,
 )
 from infrastructure.query_builder import QueryBuilder
+from infrastructure.query_builder.query_builder import escape_like
 
 from Application.Features.MateriaPrima.GetAllMateriaPrima.query import (
     GetAllMateriaPrimaQuery,
@@ -25,7 +26,10 @@ class MateriaPrimaQueryBuilder:
                 self._dto.nombre,
                 lambda: func.upper(
                     func.trim(MateriaPrimaConfiguration.nombre)
-                ).like(f"%{self._dto.nombre.strip().upper()}%"),
+                ).like(
+                    escape_like(self._dto.nombre.strip().upper()),
+                    escape="\\",
+                ),
             )
             .and_if_not_none(
                 self._dto.id_cat_amonet_tipo_materia_prima,

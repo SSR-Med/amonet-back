@@ -4,6 +4,7 @@ from sqlalchemy import func, true as sa_true
 
 from infrastructure.dataaccess.configurations import UsuarioConfiguration
 from infrastructure.query_builder import QueryBuilder
+from infrastructure.query_builder.query_builder import escape_like
 
 from Application.Features.Usuario.GetAllUsuarios.query import (
     GetAllUsuariosQuery,
@@ -23,7 +24,8 @@ class UsuarioQueryBuilder:
                 lambda: func.upper(
                     func.trim(UsuarioConfiguration.documento)
                 ).like(
-                    f"%{self._dto.documento.strip().upper()}%"
+                    escape_like(self._dto.documento.strip().upper()),
+                    escape="\\",
                 ),
             )
             .and_if_not_empty(
@@ -31,7 +33,8 @@ class UsuarioQueryBuilder:
                 lambda: func.upper(
                     func.trim(UsuarioConfiguration.rol)
                 ).like(
-                    f"%{self._dto.rol.strip().upper()}%"
+                    escape_like(self._dto.rol.strip().upper()),
+                    escape="\\",
                 ),
             )
             .and_if_not_none(

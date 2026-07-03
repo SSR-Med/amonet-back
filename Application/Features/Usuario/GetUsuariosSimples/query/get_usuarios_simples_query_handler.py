@@ -3,6 +3,7 @@ from uuid import UUID
 
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from infrastructure.query_builder.query_builder import escape_like
 
 
 class UsuarioSimpleDto:
@@ -31,15 +32,17 @@ class GetUsuariosSimplesQueryHandler:
         ).where(UsuarioConfiguration.activo == True)
 
         if documento:
+            sanitized = escape_like(documento.strip().upper())
             query = query.where(
                 func.upper(UsuarioConfiguration.documento).like(
-                    f"%{documento.strip().upper()}%"
+                    sanitized, escape="\\"
                 )
             )
         if nombre:
+            sanitized = escape_like(nombre.strip().upper())
             query = query.where(
                 func.upper(UsuarioConfiguration.nombre).like(
-                    f"%{nombre.strip().upper()}%"
+                    sanitized, escape="\\"
                 )
             )
 

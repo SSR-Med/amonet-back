@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies import get_current_user, require_roles
+from api.dependencies.rate_limiter import limiter
 from core.constants import ADMIN
 from core.dtos import CurrentUserDto
 from Application.Features.Usuario.GetUsuarioById.query import (
@@ -129,6 +130,7 @@ async def delete(
 
 
 @router.post("/login")
+@limiter.limit("5/minute")
 async def login(
     query: LoginQuery,
     session: AsyncSession = Depends(get_async_session),

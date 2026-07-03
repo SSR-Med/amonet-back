@@ -92,7 +92,7 @@ class UpdateUsuarioCommandHandler:
         AuditLogger.log(AuditLogDto(
             usuario=current_user.documento,
             feature=type(self).__name__,
-            datos=command.model_dump(),
+            datos=command.model_dump(exclude={"password"}),
         ))
 
         return UsuarioMapper.to_response(model)

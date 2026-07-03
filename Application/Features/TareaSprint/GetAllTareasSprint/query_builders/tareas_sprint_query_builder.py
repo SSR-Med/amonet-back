@@ -4,6 +4,7 @@ from sqlalchemy import func, or_
 
 from infrastructure.dataaccess.configurations import TareaSprintConfiguration
 from infrastructure.query_builder import QueryBuilder
+from infrastructure.query_builder.query_builder import escape_like
 
 from Application.Features.TareaSprint.GetAllTareasSprint.query import (
     GetAllTareasSprintQuery,
@@ -21,7 +22,9 @@ class TareasSprintQueryBuilder:
             .and_filter(TareaSprintConfiguration.activo == True)
             .and_if_not_empty(
                 self._dto.titulo,
-                lambda: TareaSprintConfiguration.titulo.ilike(f"%{self._dto.titulo}%"),
+                lambda: TareaSprintConfiguration.titulo.ilike(
+                    escape_like(self._dto.titulo), escape="\\"
+                ),
             )
             .and_if_not_none(
                 self._dto.amonet_sprint_id,

@@ -5,7 +5,6 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class SettingsService(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file="api/.env.local",
         env_file_encoding="utf-8",
         extra="ignore",
     )
@@ -15,7 +14,7 @@ class SettingsService(BaseSettings):
     DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/myapp"
     PORT: int = 8000
     CORS_ORIGINS: str = "http://localhost:3000,http://localhost:3001"
-    JWT_SECRET: str = "supersecretkey"
+    JWT_SECRET: str = ""
     JWT_EXPIRATION_HOURS: int = 8
     S3_ENDPOINT: str = ""
     S3_ACCESS_KEY: str = ""
@@ -24,6 +23,8 @@ class SettingsService(BaseSettings):
     S3_BUCKET: str = "amonet"
     S3_EVIDENCIA_PREFIX: str = "inventario/evidencia"
     S3_BACKUP_PREFIX: str = "backups"
+    S3_BACKUP_RETENTION_DAYS: int = 5
+    UPLOAD_MAX_SIZE_MB: int = 50
 
 
 @lru_cache

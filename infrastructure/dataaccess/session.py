@@ -12,7 +12,6 @@ async def init_db() -> None:
     engine = create_async_engine(
         settings.DATABASE_URL,
         echo=settings.DEBUG,
-        connect_args={"ssl": "require"},
         pool_pre_ping=True,
         pool_recycle=300,
     )

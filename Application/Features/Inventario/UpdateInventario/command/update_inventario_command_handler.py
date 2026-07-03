@@ -47,7 +47,7 @@ class UpdateInventarioCommandHandler:
         AuditLogger.log(AuditLogDto(
             usuario=current_user.documento,
             feature=type(self).__name__,
-            datos=command.model_dump(),
+            datos=command.model_dump(exclude={"archivo"}),
         ))
 
     async def _get_model(self, id: UUID) -> InventarioMateriaPrimaConfiguration:
@@ -73,9 +73,6 @@ class UpdateInventarioCommandHandler:
         if command.archivo is None or command.nombre_archivo is None:
             return
 
-        if model.ruta_evidencia:
-            self._storage.delete(model.ruta_evidencia)
-
         FileValidator.validate_is_compressed(command.archivo)
         settings = get_settings()
         ruta = f"{settings.S3_EVIDENCIA_PREFIX}/{model.numero_ingreso}"
@@ -85,6 +82,10 @@ class UpdateInventarioCommandHandler:
             archivo=command.archivo,
             nombre_archivo=command.nombre_archivo,
         ))
+
+        if model.ruta_evidencia:
+            self._storage.delete(model.ruta_evidencia)
+
         model.ruta_evidencia = f"{ruta}/{command.nombre_archivo}"
 
     async def _handle_contenedores(

@@ -13,7 +13,7 @@ class CronSetup:
     def scheduler(self) -> AsyncIOScheduler:
         return self._scheduler
 
-    def register_jobs(self) -> None:
+    async def register_jobs(self) -> None:
         self._scheduler.add_job(
             LogUploader.upload_old_logs,
             trigger="cron",
@@ -23,7 +23,7 @@ class CronSetup:
         )
 
         self._scheduler.add_job(
-            DatabaseBackupService().run,
+            DatabaseBackupService.run,
             trigger="cron",
             hour=3,
             minute=0,
