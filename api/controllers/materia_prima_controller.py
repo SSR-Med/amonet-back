@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies import get_current_user, require_roles
-from core.constants import ADMIN
+from core.constants import JEFE_PRODUCCION
 from core.dtos import CurrentUserDto
 from Application.Features.MateriaPrima.GetMateriaPrimaById.query import (
     GetMateriaPrimaByIdQuery,
@@ -73,7 +73,7 @@ async def get_all_materia_prima(
 async def create_materia_prima(
     command: CreateMateriaPrimaCommand,
     session: AsyncSession = Depends(get_async_session),
-    current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
+    current_user: CurrentUserDto = Depends(require_roles([JEFE_PRODUCCION])),
 ):
     handler = CreateMateriaPrimaCommandHandler(session)
     return await handler.handle(command, current_user)
@@ -84,7 +84,7 @@ async def update_materia_prima(
     id: UUID,
     command: UpdateMateriaPrimaCommand,
     session: AsyncSession = Depends(get_async_session),
-    current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
+    current_user: CurrentUserDto = Depends(require_roles([JEFE_PRODUCCION])),
 ):
     handler = UpdateMateriaPrimaCommandHandler(session)
     return await handler.handle(id, command, current_user)
@@ -94,7 +94,7 @@ async def update_materia_prima(
 async def delete_materia_prima(
     id: UUID,
     session: AsyncSession = Depends(get_async_session),
-    current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
+    current_user: CurrentUserDto = Depends(require_roles([JEFE_PRODUCCION])),
 ):
     handler = DeleteMateriaPrimaCommandHandler(session)
     await handler.handle(DeleteMateriaPrimaCommand(id=id), current_user)
@@ -142,7 +142,7 @@ async def get_variable_global_by_id(
 async def create(
     command: CreateVariablesGlobalesCommand,
     session: AsyncSession = Depends(get_async_session),
-    current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
+    current_user: CurrentUserDto = Depends(require_roles([JEFE_PRODUCCION])),
 ):
     handler = CreateVariablesGlobalesCommandHandler(session)
     return await handler.handle(command, current_user)
@@ -153,7 +153,7 @@ async def update(
     id: UUID,
     command: UpdateVariablesGlobalesCommand,
     session: AsyncSession = Depends(get_async_session),
-    current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
+    current_user: CurrentUserDto = Depends(require_roles([JEFE_PRODUCCION])),
 ):
     handler = UpdateVariablesGlobalesCommandHandler(session)
     return await handler.handle(id, command, current_user)
@@ -173,7 +173,7 @@ async def get_materia_prima_by_id(
 async def delete(
     id: UUID,
     session: AsyncSession = Depends(get_async_session),
-    current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
+    current_user: CurrentUserDto = Depends(require_roles([JEFE_PRODUCCION])),
 ):
     handler = DeleteVariablesGlobalesCommandHandler(session)
     await handler.handle(DeleteVariablesGlobalesCommand(id=id), current_user)

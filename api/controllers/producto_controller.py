@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies import get_current_user, require_roles
-from core.constants import ADMIN
+from core.constants import JEFE_PRODUCCION
 from core.dtos import CurrentUserDto
 from Application.Features.Producto.GetProductoById.query import (
     GetProductoByIdQuery,
@@ -55,7 +55,7 @@ async def get_producto_by_id(
 async def create(
     command: CreateProductoCommand,
     session: AsyncSession = Depends(get_async_session),
-    current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
+    current_user: CurrentUserDto = Depends(require_roles([JEFE_PRODUCCION])),
 ):
     handler = CreateProductoCommandHandler(session)
     return await handler.handle(command, current_user)
@@ -66,7 +66,7 @@ async def update(
     id: UUID,
     command: UpdateProductoCommand,
     session: AsyncSession = Depends(get_async_session),
-    current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
+    current_user: CurrentUserDto = Depends(require_roles([JEFE_PRODUCCION])),
 ):
     handler = UpdateProductoCommandHandler(session)
     return await handler.handle(id, command, current_user)
@@ -76,7 +76,7 @@ async def update(
 async def delete(
     id: UUID,
     session: AsyncSession = Depends(get_async_session),
-    current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
+    current_user: CurrentUserDto = Depends(require_roles([JEFE_PRODUCCION])),
 ):
     handler = DeleteProductoCommandHandler(session)
     await handler.handle(DeleteProductoCommand(id=id), current_user)
