@@ -2,6 +2,7 @@ from typing import List
 
 import boto3
 from botocore.config import Config
+from botocore.exceptions import ClientError, EndpointConnectionError
 
 from core.dtos import (
     ObjectStorageDownloadDto,
@@ -9,6 +10,7 @@ from core.dtos import (
     ObjectStorageListDto,
     ObjectStorageUploadDto,
 )
+from core.exceptions import BadRequestException
 from infrastructure.services.settings_service import get_settings
 
 
@@ -28,37 +30,61 @@ class ObjectStorageService:
 
     def upload(self, dto: ObjectStorageUploadDto) -> None:
         key = f"{dto.ruta}/{dto.nombre_archivo}" if dto.ruta else dto.nombre_archivo
-        self._client.put_object(Bucket=self._bucket, Key=key, Body=dto.archivo)
+        try:
+            self._client.put_object(Bucket=self._bucket, Key=key, Body=dto.archivo)
+        except (ClientError, EndpointConnectionError) as e:
+            raise BadRequestException(f"Error al subir archivo a S3: {e}")
 
     def list(self, dto: ObjectStorageListDto, recursive: bool = False) -> List[ObjectStorageItemDto]:
         prefix = f"{dto.ruta}/" if dto.ruta else ""
         kwargs = {"Bucket": self._bucket, "Prefix": prefix}
         if not recursive:
             kwargs["Delimiter"] = "/"
-        resp = self._client.list_objects_v2(**kwargs)
 
         items: List[ObjectStorageItemDto] = []
-        if not recursive:
-            for folder in resp.get("CommonPrefixes", []):
-                items.append(
-                    ObjectStorageItemDto(nombre=folder["Prefix"], es_directorio=True)
-                )
-        for obj in resp.get("Contents", []):
-            nombre = obj["Key"].replace(prefix, "")
-            if nombre:
-                items.append(
-                    ObjectStorageItemDto(
-                        nombre=nombre, es_directorio=False, peso=obj["Size"]
+        pagination_token = None
+
+        while True:
+            if pagination_token:
+                kwargs["ContinuationToken"] = pagination_token
+
+            try:
+                resp = self._client.list_objects_v2(**kwargs)
+            except (ClientError, EndpointConnectionError) as e:
+                raise BadRequestException(f"Error al listar objetos en S3: {e}")
+
+            if not recursive:
+                for folder in resp.get("CommonPrefixes", []):
+                    items.append(
+                        ObjectStorageItemDto(nombre=folder["Prefix"], es_directorio=True)
                     )
-                )
+            for obj in resp.get("Contents", []):
+                nombre = obj["Key"].replace(prefix, "")
+                if nombre:
+                    items.append(
+                        ObjectStorageItemDto(
+                            nombre=nombre, es_directorio=False, peso=obj["Size"]
+                        )
+                    )
+
+            if not resp.get("IsTruncated"):
+                break
+            pagination_token = resp.get("NextContinuationToken")
+
         return items
 
     def delete(self, key: str) -> None:
-        self._client.delete_object(Bucket=self._bucket, Key=key)
+        try:
+            self._client.delete_object(Bucket=self._bucket, Key=key)
+        except (ClientError, EndpointConnectionError) as e:
+            raise BadRequestException(f"Error al eliminar objeto de S3: {e}")
 
     def get_download_url(self, dto: ObjectStorageDownloadDto) -> str:
-        return self._client.generate_presigned_url(
-            "get_object",
-            Params={"Bucket": self._bucket, "Key": dto.ruta},
-            ExpiresIn=3600,
-        )
+        try:
+            return self._client.generate_presigned_url(
+                "get_object",
+                Params={"Bucket": self._bucket, "Key": dto.ruta},
+                ExpiresIn=3600,
+            )
+        except (ClientError, EndpointConnectionError) as e:
+            raise BadRequestException(f"Error al generar URL de descarga: {e}")

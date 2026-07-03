@@ -2,6 +2,8 @@ from functools import lru_cache
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from core.exceptions import DomainException
+
 
 class SettingsService(BaseSettings):
     model_config = SettingsConfigDict(
@@ -29,4 +31,7 @@ class SettingsService(BaseSettings):
 
 @lru_cache
 def get_settings() -> SettingsService:
-    return SettingsService()
+    settings = SettingsService()
+    if not settings.JWT_SECRET:
+        raise DomainException("JWT_SECRET is not configured. Set it in environment or .env file.")
+    return settings

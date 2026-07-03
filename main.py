@@ -1,4 +1,4 @@
-from contextlib import asynccontextmanager
+import logging
 
 import uvicorn
 from fastapi import FastAPI, Request
@@ -12,6 +12,9 @@ from api.crons import scheduler, setup
 from api.dependencies.rate_limiter import limiter
 from infrastructure.dataaccess import init_db
 from infrastructure.services import LogUploader, get_settings
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
