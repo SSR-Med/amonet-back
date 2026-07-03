@@ -1,7 +1,7 @@
 from typing import Optional
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies import get_current_user, require_roles
@@ -132,6 +132,7 @@ async def delete(
 @router.post("/login")
 @limiter.limit("5/minute")
 async def login(
+    request: Request,
     query: LoginQuery,
     session: AsyncSession = Depends(get_async_session),
 ):
