@@ -28,6 +28,7 @@ from Application.Features.Inventario.GetAllInventario.query import (
     GetAllInventarioQuery,
     GetAllInventarioQueryHandler,
 )
+from core.constants import CALIDAD
 from core.dtos import CurrentUserDto
 from infrastructure.dataaccess import get_async_session
 from infrastructure.services import get_settings
@@ -70,7 +71,7 @@ async def update_inventario(
     id: UUID,
     request: Request,
     session: AsyncSession = Depends(get_async_session),
-    current_user: CurrentUserDto = Depends(require_roles(["CALIDAD"])),
+    current_user: CurrentUserDto = Depends(require_roles([CALIDAD])),
     archivo: UploadFile = File(None),
     data: str = Form(None),
 ):
