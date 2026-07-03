@@ -31,7 +31,7 @@ def create_app() -> FastAPI:
         title=settings.APP_NAME,
         debug=settings.DEBUG,
         lifespan=lifespan,
-        redirect_slashes=False,
+
     )
 
     origins = settings.CORS_ORIGINS.split(",")
