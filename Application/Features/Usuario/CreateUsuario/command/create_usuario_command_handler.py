@@ -7,6 +7,9 @@ from Application.Features.Usuario.CreateUsuario.command import (
 from Application.Features.Usuario.CreateUsuario.mappers import (
     CreateUsuarioMapper,
 )
+from Application.Features.Usuario.CreateUsuario.validators import (
+    PasswordValidator,
+)
 from Application.Features.Usuario.GetAllUsuarios.dtos import (
     UsuarioResponseDto,
 )
@@ -36,6 +39,7 @@ class CreateUsuarioCommandHandler:
     ) -> UsuarioResponseDto:
         command.nombre = command.nombre.strip().upper()
         command.documento = command.documento.strip()
+        PasswordValidator.validate(command.password)
 
         existing = await self._repository.first_or_default(
             lambda q: q.where(

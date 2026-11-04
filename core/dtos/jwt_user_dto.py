@@ -8,3 +8,4 @@ class JwtUserDto:
     documento: str
     nombre: str
     rol: str
+    token_version: int

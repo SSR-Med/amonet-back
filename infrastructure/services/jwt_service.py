@@ -17,6 +17,7 @@ class JwtService:
             "documento": user.documento,
             "nombre": user.nombre,
             "rol": user.rol,
+            "ver": user.token_version,
             "iat": datetime.now(timezone.utc),
             "exp": datetime.now(timezone.utc) + timedelta(hours=settings.JWT_EXPIRATION_HOURS),
         }

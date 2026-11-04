@@ -1,12 +1,12 @@
 from typing import Optional
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query, Request
+from fastapi import APIRouter, Depends, Query, Request, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies import get_current_user, require_roles
 from api.dependencies.rate_limiter import limiter
-from core.constants import ADMIN
+from core.constants import ADMIN, AUTH_COOKIE
 from core.dtos import CurrentUserDto
 from Application.Features.Usuario.GetUsuarioById.query import (
     GetUsuarioByIdQuery,
@@ -44,6 +44,7 @@ from Application.Features.Usuario.Login.query import (
     LoginQueryHandler,
 )
 from infrastructure.dataaccess import get_async_session
+from infrastructure.services import get_settings
 
 router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
 
@@ -133,8 +134,27 @@ async def delete(
 @limiter.limit("5/minute")
 async def login(
     request: Request,
+    response: Response,
     query: LoginQuery,
     session: AsyncSession = Depends(get_async_session),
 ):
     handler = LoginQueryHandler(session)
-    return await handler.handle(query)
+    result = await handler.handle(query)
+
+    settings = get_settings()
+    response.set_cookie(
+        key=AUTH_COOKIE,
+        value=result.token,
+        httponly=True,
+        secure=not settings.DEBUG,
+        samesite="lax",
+        max_age=settings.JWT_EXPIRATION_HOURS * 3600,
+        path="/",
+    )
+
+    return result
+
+
+@router.post("/logout", status_code=204)
+async def logout(response: Response):
+    response.delete_cookie(key=AUTH_COOKIE, path="/")

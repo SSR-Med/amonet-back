@@ -9,6 +9,9 @@ from Application.Features.Usuario.GetAllUsuarios.dtos import (
 from Application.Features.Usuario.GetAllUsuarios.mappers import (
     UsuarioMapper,
 )
+from Application.Features.Usuario.CreateUsuario.validators import (
+    PasswordValidator,
+)
 from Application.Features.Usuario.UpdateUsuario.command import (
     UpdateUsuarioCommand,
 )
@@ -79,6 +82,9 @@ class UpdateUsuarioCommandHandler:
             if rol is None:
                 raise BadRequestException(f"Rol '{command.rol}' does not exist")
 
+        if command.password is not None:
+            PasswordValidator.validate(command.password)
+
         new_password = (
             PasswordService.hash(command.password)
             if command.password is not None
@@ -86,6 +92,9 @@ class UpdateUsuarioCommandHandler:
         )
 
         model = UpdateUsuarioMapper.apply(model, command, new_password)
+
+        if command.password is not None or command.rol is not None:
+            model.token_version += 1
         await self._repository.update(model)
         await self._unit_of_work.commit()
 

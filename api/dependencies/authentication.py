@@ -1,22 +1,39 @@
-from fastapi import Depends
+from typing import Optional
+
+from fastapi import Depends, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from core.constants import AUTH_COOKIE
 from core.dtos import CurrentUserDto
 from core.exceptions import AuthenticationException
 from infrastructure.dataaccess import get_async_session
 from infrastructure.dataaccess.configurations import UsuarioConfiguration
 from infrastructure.services import JwtService
 
-security = HTTPBearer(scheme_name="BearerAuth")
+security = HTTPBearer(scheme_name="BearerAuth", auto_error=False)
+
+
+def _extract_token(
+    request: Request, credentials: Optional[HTTPAuthorizationCredentials]
+) -> str:
+    if credentials is not None:
+        return credentials.credentials
+
+    token = request.cookies.get(AUTH_COOKIE)
+    if not token:
+        raise AuthenticationException("Missing credentials")
+
+    return token
 
 
 async def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
+    request: Request,
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),
     session: AsyncSession = Depends(get_async_session),
 ) -> CurrentUserDto:
-    token = credentials.credentials
+    token = _extract_token(request, credentials)
 
     try:
         payload = JwtService.decode(token)
@@ -35,6 +52,9 @@ async def get_current_user(
 
     if not user.activo:
         raise AuthenticationException("User is inactive")
+
+    if payload.get("ver", 0) != user.token_version:
+        raise AuthenticationException("Token revoked")
 
     return CurrentUserDto(
         id=user.id_amonet_usuario,

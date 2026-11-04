@@ -1,3 +1,4 @@
+from .health_controller import router as health_router
 from .inventario_controller import router as inventario_router
 from .logs_controller import router as logs_router
 from .marca_controller import router as marca_router

@@ -4,6 +4,7 @@ from typing import Optional
 from Application.Features.Logs.DownloadLog.query import DownloadLogQuery
 from core.constants import LOGS
 from core.dtos import ObjectStorageDownloadDto, ObjectStorageListDto
+from core.exceptions import BadRequestException
 from infrastructure.services import ObjectStorageService
 
 
@@ -21,18 +22,23 @@ class DownloadLogQueryHandler:
         self._storage = ObjectStorageService()
 
     async def handle(self, query: DownloadLogQuery) -> Optional[DownloadLogResult]:
-        filename = query.nombre
-        fecha = filename.replace(".log", "")
+        filename = Path(query.nombre).name
+        if not filename.endswith(".log"):
+            raise BadRequestException("Nombre de archivo inválido")
+
+        logs_root = Path(LOGS).resolve()
+        local_file = (logs_root / filename).resolve()
+        if local_file.parent != logs_root:
+            raise BadRequestException("Nombre de archivo inválido")
 
         s3_items = self._storage.list(ObjectStorageListDto(ruta=LOGS), recursive=True)
         for item in s3_items:
-            if not item.es_directorio and item.nombre.endswith(filename):
+            if not item.es_directorio and item.nombre == filename:
                 s3_key = f"{LOGS}/{item.nombre}"
                 url = self._storage.get_download_url(ObjectStorageDownloadDto(ruta=s3_key))
                 return DownloadLogResult(origen="s3", nombre=filename, presigned_url=url)
 
-        local_file = Path(LOGS) / filename
-        if local_file.exists():
+        if local_file.is_file():
             return DownloadLogResult(origen="local", nombre=filename, local_path=local_file)
 
         return None

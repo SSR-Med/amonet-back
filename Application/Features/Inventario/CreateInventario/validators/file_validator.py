@@ -1,6 +1,7 @@
 import filetype
 
 from core.constants import COMPRESSED_EXTENSIONS, COMPRESSED_MIMES
+from core.exceptions import BadRequestException
 
 
 class FileValidator:
@@ -9,6 +10,6 @@ class FileValidator:
     def validate_is_compressed(archivo: bytes) -> None:
         kind = filetype.guess(archivo)
         if kind is None or kind.mime not in COMPRESSED_MIMES:
-            raise ValueError(
+            raise BadRequestException(
                 f"El archivo debe ser un archivo comprimido ({COMPRESSED_EXTENSIONS})"
             )

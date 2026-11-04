@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 from slowapi.errors import RateLimitExceeded
 
 from api.configurations import register_exception_handlers
-from api.controllers import columna_kanban_router, comentario_tarea_router, inventario_router, logs_router, marca_router, materia_prima_router, orden_produccion_router, prioridad_kanban_router, producto_router, sprint_router, tag_kanban_router, tarea_sprint_router, usuario_router
+from api.controllers import columna_kanban_router, comentario_tarea_router, health_router, inventario_router, logs_router, marca_router, materia_prima_router, orden_produccion_router, prioridad_kanban_router, producto_router, sprint_router, tag_kanban_router, tarea_sprint_router, usuario_router
 from api.crons import scheduler, setup
 from api.dependencies.rate_limiter import limiter
 from infrastructure.dataaccess import init_db
@@ -34,7 +34,9 @@ def create_app() -> FastAPI:
         title=settings.APP_NAME,
         debug=settings.DEBUG,
         lifespan=lifespan,
-
+        docs_url="/docs" if settings.DEBUG else None,
+        redoc_url=None,
+        openapi_url="/openapi.json" if settings.DEBUG else None,
     )
 
     origins = settings.CORS_ORIGINS.split(",")
@@ -62,6 +64,7 @@ def create_app() -> FastAPI:
 
     register_exception_handlers(app)
 
+    app.include_router(health_router)
     app.include_router(inventario_router, prefix="/api/v1")
     app.include_router(logs_router, prefix="/api/v1")
     app.include_router(marca_router, prefix="/api/v1")

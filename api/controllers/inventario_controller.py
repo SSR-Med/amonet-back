@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, File, Form, Query, Request, UploadFile
@@ -104,7 +105,7 @@ async def create_inventario(
     command = CreateInventarioCommand(
         items=parsed_items,
         archivo=archivo_bytes,
-        nombre_archivo=archivo.filename or "file",
+        nombre_archivo=Path(archivo.filename or "file").name,
     )
     handler = CreateInventarioCommandHandler(session)
     await handler.handle(command, current_user)

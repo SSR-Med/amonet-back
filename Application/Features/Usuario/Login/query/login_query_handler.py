@@ -31,6 +31,7 @@ class LoginQueryHandler:
             documento=user.documento,
             nombre=user.nombre,
             rol=user.rol,
+            token_version=user.token_version,
         )
         token = JwtService.generate(jwt_user)
 

@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from sqlalchemy import Boolean, String, text
+from sqlalchemy import Boolean, Integer, String, text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -22,3 +22,6 @@ class UsuarioConfiguration(Base):
         Boolean, nullable=False, default=True, server_default=text("true")
     )
     password: Mapped[str] = mapped_column(String(255), nullable=False)
+    token_version: Mapped[int] = mapped_column(
+        Integer, nullable=False, default=0, server_default=text("0")
+    )
