@@ -4,9 +4,9 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, Query, Request, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.dependencies import get_current_user, require_roles
+from api.dependencies import get_current_user, require_admin
 from api.dependencies.rate_limiter import limiter
-from core.constants import ADMIN, AUTH_COOKIE
+from core.constants import AUTH_COOKIE
 from core.dtos import CurrentUserDto
 from Application.Features.Usuario.GetUsuarioById.query import (
     GetUsuarioByIdQuery,
@@ -53,7 +53,7 @@ router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
 async def create(
     command: CreateUsuarioCommand,
     session: AsyncSession = Depends(get_async_session),
-    current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
+    current_user: CurrentUserDto = Depends(require_admin()),
 ):
     handler = CreateUsuarioCommandHandler(session)
     return await handler.handle(command, current_user)
@@ -92,7 +92,7 @@ async def get_all_roles(
 async def get_all(
     query: GetAllUsuariosQuery = Query(),
     session: AsyncSession = Depends(get_async_session),
-    current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
+    current_user: CurrentUserDto = Depends(require_admin()),
 ):
     handler = GetAllUsuariosQueryHandler(session)
     return await handler.handle(query)
@@ -102,7 +102,7 @@ async def get_all(
 async def get_usuario_by_id(
     id: UUID,
     session: AsyncSession = Depends(get_async_session),
-    current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
+    current_user: CurrentUserDto = Depends(require_admin()),
 ):
     handler = GetUsuarioByIdQueryHandler(session)
     return await handler.handle(GetUsuarioByIdQuery(id=id))
@@ -113,7 +113,7 @@ async def update(
     id: UUID,
     command: UpdateUsuarioCommand,
     session: AsyncSession = Depends(get_async_session),
-    current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
+    current_user: CurrentUserDto = Depends(require_admin()),
 ):
     handler = UpdateUsuarioCommandHandler(session)
     return await handler.handle(id, command, current_user)
@@ -123,7 +123,7 @@ async def update(
 async def delete(
     id: UUID,
     session: AsyncSession = Depends(get_async_session),
-    current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
+    current_user: CurrentUserDto = Depends(require_admin()),
 ):
     command = DeleteUsuarioCommand(id=id)
     handler = DeleteUsuarioCommandHandler(session)

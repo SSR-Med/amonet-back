@@ -46,9 +46,9 @@ Arquitectura hexagonal (Puertos y Adaptadores) + CQRS + DDD.
 
 | Módulo | Endpoints | Roles |
 |---|---|---|
-| **Marcas** | CRUD completo, paginado, filtro por nombre | ADMIN |
-| **Productos** | CRUD completo, fórmulas matemáticas con validación sympy | ADMIN |
-| **Materias Primas** | CRUD + catálogos (tipos, unidades) + variables globales | ADMIN |
+| **Marcas** | CRUD completo, paginado, filtro por nombre | JEFE_PRODUCCION |
+| **Productos** | CRUD completo, fórmulas matemáticas con validación sympy | JEFE_PRODUCCION |
+| **Materias Primas** | CRUD + catálogos (tipos, unidades) + variables globales | JEFE_PRODUCCION |
 | **Inventario** | Ingresos con evidencia (foto), aprobación/rechazo, descarga de evidencia | OPERARIO crea, CALIDAD aprueba/rechaza |
 | **Órdenes de Producción** | Creación con wizard (4 pasos), cambio de estado (finalizar/cancelar con restauración de stock) | JEFE_PRODUCCION crea |
 | **Usuarios** | CRUD, login JWT, roles | ADMIN |
@@ -58,13 +58,15 @@ Arquitectura hexagonal (Puertos y Adaptadores) + CQRS + DDD.
 
 - JWT con HS256. Login retorna token con payload: sub, documento, nombre, rol.
 - `HTTPBearer` con esquema `BearerAuth` en Swagger.
-- `require_roles()` verifica rol del usuario. ADMIN siempre incluido implícitamente.
+- `require_roles()` valida roles operativos: ADMIN y TODERO siempre están incluidos implícitamente.
+- `require_admin()` protege los endpoints exclusivos del administrador (usuarios y logs).
 
 ### Roles
 
 | Rol | Permisos |
 |---|---|
-| ADMIN | Acceso total |
+| ADMIN | Acceso total, gestión de usuarios y logs |
+| TODERO | Todo lo operativo: producción, inventario, órdenes y kanban. Sin usuarios ni logs |
 | JEFE_PRODUCCION | Crear y gestionar órdenes |
 | CALIDAD | Aprobar/rechazar inventario |
 | OPERARIO | Lectura, crear ingresos de inventario |

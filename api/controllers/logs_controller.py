@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import FileResponse, RedirectResponse
 
-from api.dependencies import require_roles
+from api.dependencies import require_admin
 from Application.Features.Logs.DownloadLog.query import (
     DownloadLogQuery,
     DownloadLogQueryHandler,
@@ -10,7 +10,6 @@ from Application.Features.Logs.GetLogs.query import (
     GetLogsQuery,
     GetLogsQueryHandler,
 )
-from core.constants import ADMIN
 from core.dtos import CurrentUserDto
 
 router = APIRouter(prefix="/logs", tags=["Logs"])
@@ -19,7 +18,7 @@ router = APIRouter(prefix="/logs", tags=["Logs"])
 @router.get("/")
 async def get_logs(
     query: GetLogsQuery = Query(),
-    current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
+    current_user: CurrentUserDto = Depends(require_admin()),
 ):
     handler = GetLogsQueryHandler()
     return await handler.handle(query)
@@ -28,7 +27,7 @@ async def get_logs(
 @router.get("/download")
 async def download_log(
     nombre: str,
-    current_user: CurrentUserDto = Depends(require_roles([ADMIN])),
+    current_user: CurrentUserDto = Depends(require_admin()),
 ):
     handler = DownloadLogQueryHandler()
     result = await handler.handle(DownloadLogQuery(nombre=nombre))

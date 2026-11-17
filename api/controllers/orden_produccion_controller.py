@@ -65,7 +65,7 @@ async def update_estado(
     id: UUID,
     command: UpdateOrdenProduccionEstadoCommand,
     session: AsyncSession = Depends(get_async_session),
-    current_user: CurrentUserDto = Depends(get_current_user),
+    current_user: CurrentUserDto = Depends(require_roles([JEFE_PRODUCCION])),
 ):
     handler = UpdateOrdenProduccionEstadoCommandHandler(session)
     return await handler.handle(id, command, current_user)
